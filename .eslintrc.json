@@ -1,0 +1,6 @@
+{
+  "extends": ["plugin:adonis/typescriptApp", "plugin:prettier/recommended", "prettier/@typescript-eslint"],
+  "rules": {
+    "no-console": "error"
+  }
+}

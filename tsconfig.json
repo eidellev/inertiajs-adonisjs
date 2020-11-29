@@ -1,0 +1,19 @@
+{
+  "include": ["**/*"],
+  "exclude": ["node_modules", "build", "resources/js"],
+  "extends": "./node_modules/adonis-preset-ts/tsconfig",
+  "compilerOptions": {
+    "outDir": "build",
+    "lib": ["ES2017", "dom", "es2019.object"],
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "rootDir": "./",
+    "paths": {
+      "App/*": ["./app/*"],
+      "Contracts/*": ["./contracts/*"],
+      "Database/*": ["./database/*"],
+      "Helpers/*": ["./helpers/*"]
+    },
+    "types": ["@adonisjs/core", "@adonisjs/view"]
+  }
+}

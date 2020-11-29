@@ -1,6 +1,24 @@
 {
-  "name": "inertia-adonisjs",
+  "name": "@eidellev/inertia-adonisjs",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint . --ext=ts",
+    "lint:fix": "eslint . --ext=ts --fix"
+  },
+  "dependencies": {
+    "@types/he": "^1.1.1",
+    "he": "^1.2.0"
+  },
+  "devDependencies": {
+    "@adonisjs/core": "^5.0.1",
+    "adonis-preset-ts": "^1.1.0",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-adonis": "^1.0.15",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.2"
+  }
 }
