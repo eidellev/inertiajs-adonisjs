@@ -1,20 +1,12 @@
 {
-  "include": ["**/*"],
-  "exclude": ["node_modules", "build", "resources/js"],
-  "extends": "./node_modules/adonis-preset-ts/tsconfig",
+  "extends": "./node_modules/@adonisjs/mrm-preset/_tsconfig",
   "compilerOptions": {
-    "outDir": "build",
-    "lib": ["ES2017", "dom", "es2019.object"],
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "declaration": true,
-    "rootDir": "./",
-    "paths": {
-      "App/*": ["./app/*"],
-      "Contracts/*": ["./contracts/*"],
-      "Database/*": ["./database/*"],
-      "Helpers/*": ["./helpers/*"]
-    },
-    "types": ["@adonisjs/core", "@adonisjs/view"]
-  }
+    "lib": ["dom", "es2019", "es2020.bigint", "es2020.string", "es2020.symbol.wellknown"],
+    "skipLibCheck": true
+  },
+  "files": [
+    "./node_modules/@adonisjs/core/build/adonis-typings/index.d.ts",
+    "./node_modules/@adonisjs/view/build/adonis-typings/index.d.ts",
+    "./node_modules/@adonisjs/config/build/adonis-typings/config.d.ts"
+  ]
 }
