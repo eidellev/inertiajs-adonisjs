@@ -1,3 +1,10 @@
 declare module '@ioc:Adonis/Core/HttpContext' {
-  interface ConfigContract {}
+  import { InertiaContract } from '@ioc:EidelLev/Inertia';
+
+  interface HttpContextContract {
+    /**
+     * InertiaJs
+     */
+    inertia: InertiaContract;
+  }
 }
