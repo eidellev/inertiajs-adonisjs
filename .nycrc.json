@@ -1,0 +1,9 @@
+{
+  "check-coverage": true,
+  "reporter": ["text", "lcov"],
+  "exclude": ["build/**", "japaFile.js"],
+  "branches": 80,
+  "lines": 80,
+  "functions": 80,
+  "statements": 80
+}

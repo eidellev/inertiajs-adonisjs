@@ -5,6 +5,5 @@ coverage
 .DS_STORE
 .env
 tmp
-public/**/*.js
-public/**/*.js.LICENSE.txt
-public/**/*.css
+.nyc_output
+yarn-error.log
