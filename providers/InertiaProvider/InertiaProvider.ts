@@ -1,4 +1,4 @@
-import { IocContract } from '@adonisjs/fold';
+import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import { Inertia } from '../../src/Inertia';
 import he from 'he';
 
@@ -8,22 +8,26 @@ import he from 'he';
 |--------------------------------------------------------------------------
 */
 export default class InertiaProvider {
-  constructor(protected container: IocContract) {}
+  constructor(protected app: ApplicationContract) {}
+  public static needsApplication = true;
 
   public boot(): void {
     /**
      * Hook Inertia into ctx during request cycle.
      */
-    this.container.with(
+    this.app.container.with(
       ['Adonis/Core/HttpContext', 'Adonis/Core/View', 'Adonis/Core/Config'],
       (HttpContext, View, Config) => {
-        // Register Inertia 'middleware'
+        const config = Config.get('app.inertia', { view: 'app' });
+        /**
+         * Hook inertia into ctx during request cycle.
+         */
         HttpContext.getter(
           'inertia',
           function inertia() {
-            return new Inertia(this, Config);
+            return new Inertia(this, config);
           },
-          false,
+          true,
         );
 
         // Register inertia view global helper
