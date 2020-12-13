@@ -2,6 +2,8 @@
   "name": "@eidellev/inertia-adonisjs",
   "version": "1.0.0",
   "description": "InertiaJS provider for AdonisJS",
+  "repository": "https://github.com/eidellev/inertiajs-adonisjs",
+  "bugs": "https://github.com/eidellev/inertiajs-adonisjs/issues",
   "main": "build/providers/InertiaProvider/index.js",
   "typings": "./build/adonis-typings/index.d.ts",
   "files": [
