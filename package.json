@@ -24,7 +24,9 @@
   "dependencies": {
     "@adonisjs/mrm-preset": "adonisjs/mrm-preset",
     "@types/he": "^1.1.1",
-    "he": "^1.2.0"
+    "he": "^1.2.0",
+    "husky": "^4.3.5",
+    "lint-staged": "^10.5.3"
   },
   "peerDependencies": {
     "@adonisjs/config": "^2.0.3",
