@@ -1,7 +1,7 @@
 {
   "check-coverage": true,
   "reporter": ["text", "lcov"],
-  "exclude": ["build/**", "japaFile.js", "test/"],
+  "exclude": ["build/**", "japaFile.js", "test/", "providers/InertiaProvider/index.ts"],
   "branches": 80,
   "lines": 80,
   "functions": 80,
