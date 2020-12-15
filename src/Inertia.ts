@@ -1,4 +1,4 @@
-import { ResponseProps, InertiaConfig, InertiaContract, ShareCallback } from '@ioc:EidelLev/Inertia';
+import { ResponseProps, InertiaConfig, InertiaContract, SharedData } from '@ioc:EidelLev/Inertia';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
 export enum HEADERS {
@@ -6,12 +6,12 @@ export enum HEADERS {
   INERTIA_PARTIAL_DATA_HEADER = 'x-inertia-partial-data',
 }
 
-let sharedData = {};
+let sharedData: SharedData = {};
 
 export class Inertia implements InertiaContract {
   constructor(private ctx: HttpContextContract, private config: InertiaConfig) {}
 
-  public static share(data: Record<string, string | number | object | boolean | ShareCallback>): void {
+  public static share(data: SharedData): void {
     sharedData = data;
   }
 
@@ -39,7 +39,7 @@ export class Inertia implements InertiaContract {
     // Resolve lazy props
     Object.entries(props).forEach(([key, value]) => {
       if (typeof value === 'function') {
-        const resolvedValue = value({ ctx: this.ctx, component, props });
+        const resolvedValue = value(this.ctx);
         props[key] = resolvedValue;
       }
     });

@@ -117,11 +117,11 @@ In order to add shared props, add the following preloaded file to `start` direct
 ```
 // /start/inertia.ts
 
-import { Inertia } from '@eidellev/inertia-adonisjs';
+import Inertia from '@ioc:EidelLev/Inertia';
 
 Inertia.share({
-  errors: ({ ctx }) => {
-    return ctx?.session?.flashMessages.get('errors');
+  errors: (ctx) => {
+    return ctx.session.flashMessages.get('errors');
   },
 });
 

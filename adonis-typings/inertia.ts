@@ -2,8 +2,9 @@ declare module '@ioc:EidelLev/Inertia' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
   export type ResponseProps = Record<string, unknown>;
-
-  export type ShareCallback = { ctx: HttpContextContract; component: string; props: Record<string, unknown> };
+  export type LazyShareResponse = Record<string, string | number | object | boolean>;
+  export type LazyShare = (ctx: HttpContextContract) => LazyShareResponse | Promise<LazyShareResponse>;
+  export type SharedData = Record<string, string | number | object | boolean | LazyShare>;
 
   export interface InertiaContract {
     /**
@@ -30,4 +31,11 @@ declare module '@ioc:EidelLev/Inertia' {
   export interface InertiaConfig {
     view: string;
   }
+
+  interface InertiaGlobal {
+    share: (data: SharedData) => void;
+  }
+
+  const Inertia: InertiaGlobal;
+  export default Inertia;
 }

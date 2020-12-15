@@ -38,12 +38,22 @@ export default class InertiaProvider {
     );
   }
 
+  /**
+   * Registers inertia binding
+   */
+  public registerBinding() {
+    this.app.container.singleton('EidelLev/Inertia', () => ({
+      share: Inertia.share,
+    }));
+  }
+
   public boot(): void {
     this.app.container.with(
       ['Adonis/Core/HttpContext', 'Adonis/Core/View', 'Adonis/Core/Config'],
       (HttpContext, View, Config) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
+        this.registerBinding();
       },
     );
   }
