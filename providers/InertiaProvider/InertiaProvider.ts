@@ -1,10 +1,9 @@
 import he from 'he';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
-import { ServerContract } from '@ioc:Adonis/Core/Server';
 import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
 import { ViewContract } from '@ioc:Adonis/Core/View';
 import { ConfigContract } from '@ioc:Adonis/Core/Config';
-import { Inertia, HEADERS } from '../../src/Inertia';
+import { Inertia } from '../../src/Inertia';
 
 /*
 |--------------------------------------------------------------------------
@@ -39,24 +38,12 @@ export default class InertiaProvider {
     );
   }
 
-  /**
-   * Ensure all inertia requests are responded to with the correct header
-   */
-  private setAfterHook(Server: ServerContract) {
-    Server.hooks.after(async (ctx) => {
-      if (ctx?.inertia.isInertia()) {
-        ctx.response.header(HEADERS.INERTIA_HEADER, true);
-      }
-    });
-  }
-
   public boot(): void {
     this.app.container.with(
-      ['Adonis/Core/Server', 'Adonis/Core/HttpContext', 'Adonis/Core/View', 'Adonis/Core/Config'],
-      (Server, HttpContext, View, Config) => {
+      ['Adonis/Core/HttpContext', 'Adonis/Core/View', 'Adonis/Core/Config'],
+      (HttpContext, View, Config) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
-        this.setAfterHook(Server);
       },
     );
   }
