@@ -12,6 +12,30 @@ yarn add @eidellev/inertia-adonisjs
 
 ## Usage
 
+### Registering Types
+
+Open your `tsconfig.json` file and add `@eidellev/inertia-adonisjs` to `compilerOptions.types`:
+
+```json
+{
+  "include": ["**/*"],
+  "exclude": [...],
+  "extends": "./node_modules/adonis-preset-ts/tsconfig",
+  "compilerOptions": {
+    ...
+    },
+    "types": [
+      "@adonisjs/core",
+      "@adonisjs/session",
+      "@adonisjs/view",
+      "@adonisjs/lucid",
+      "@eidellev/inertia-adonisjs" // Add this line
+    ]
+  }
+}
+
+```
+
 ### Registering Provider
 
 Open `.adonisrc` and add `@eidellev/inertia-adonisjs` to the list of providers:
@@ -53,7 +77,7 @@ export default class UsersController {
 
 ### Handling Validation Errors
 
-To ensure validation errors are handled correctly, you should add following to the `handle` method of your exception handler:
+To ensure validation errors are handled correctly, you should add the following to the `handle` method of your exception handler:
 
 ```typescript
 // /app/Exceptions/Handler.ts
@@ -109,7 +133,7 @@ By default, `inertia-adonisjs` uses `app.edge` as its view. If you need to chang
 
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
-
+...
 /*
 |--------------------------------------------------------------------------
 | Application secret key

@@ -11,13 +11,19 @@
     "build/providers",
     "build/src"
   ],
+  "adonisjs": {
+    "types": "@eidellev/inertia-adonisjs",
+    "instructionsMd": "./build/instructions.md",
+    "providers": [
+      "@eidellev/inertia-adonisjs"
+    ]
+  },
   "license": "MIT",
   "scripts": {
     "lint": "tsc --noEmit && eslint . --ext=ts",
     "lint:fix": "eslint . --ext=ts --fix",
     "clean": "rimraf build",
-    "copyfiles": "copyfiles -a \"adonis-typings/*.d.ts\" ./build",
-    "build": "cross-env yarn clean && tsc && yarn copyfiles",
+    "build": "cross-env yarn clean && tsc",
     "test": "nyc node japaFile.js"
   },
   "dependencies": {
@@ -42,7 +48,6 @@
     "@types/supertest": "^2.0.10",
     "adonis-preset-ts": "^1.1.0",
     "common-tags": "^1.8.0",
-    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",

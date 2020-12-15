@@ -9,5 +9,5 @@
     "./node_modules/@adonisjs/view/build/adonis-typings/index.d.ts",
     "./node_modules/@adonisjs/config/build/adonis-typings/config.d.ts"
   ],
-  "exclude": ["test", "build", "node_modules"]
+  "exclude": ["test/*", "build/*", "node_modules/*"]
 }
