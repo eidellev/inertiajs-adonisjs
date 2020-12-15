@@ -9,10 +9,7 @@
   "files": [
     "build/adonis-typings",
     "build/providers",
-    "build/src",
-    "build/config",
-    "build/start",
-    "build/app"
+    "build/src"
   ],
   "license": "MIT",
   "scripts": {

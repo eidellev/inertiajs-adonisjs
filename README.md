@@ -51,17 +51,61 @@ export default class UsersController {
 }
 ```
 
-### Handling Redirects
+### Handling Validation Errors
 
-...
+To ensure validation errors are handled correctly, you should add following to the `handle` method of your exception handler:
+
+```typescript
+// /app/Exceptions/Handler.ts
+import Logger from '@ioc:Adonis/Core/Logger';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler';
+
+export default class ExceptionHandler extends HttpExceptionHandler {
+  protected statusPages = {
+    '404': 'errors.not-found',
+    '500..599': 'errors.server-error',
+  };
+
+  public async handle(error: any, ctx: HttpContextContract) {
+    const { inertia, session } = ctx;
+
+    this.logger.error(error);
+
+    if (error.code === 'E_VALIDATION_FAILURE' && inertia.isInertia()) {
+      session.flash('errors', error);
+      return inertia.redirectBack(); // This ensures that the response has the correct HTTP code
+    }
+
+    return super.handle(error, ctx);
+  }
+
+  constructor() {
+    super(Logger);
+  }
+}
+```
 
 ### Shared Props
 
-...
+In order to add shared props, add the following preloaded file to `start` directory:
+
+```
+// /start/inertia.ts
+
+import { Inertia } from '@eidellev/inertia-adonisjs';
+
+Inertia.share({
+  errors: ({ ctx }) => {
+    return ctx?.session?.flashMessages.get('errors');
+  },
+});
+
+```
 
 ## Configuration
 
-By default, `inertia-adonisjs` use `app.edge` as its view. If you need to change this, add the following to `/config/app.ts`:
+By default, `inertia-adonisjs` uses `app.edge` as its view. If you need to change this, add the following to `/config/app.ts`:
 
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
