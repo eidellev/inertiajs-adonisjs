@@ -114,7 +114,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
 
 In order to add shared props, add the following preloaded file to `start` directory:
 
-```
+```typescript
 // /start/inertia.ts
 
 import Inertia from '@ioc:EidelLev/Inertia';
@@ -124,7 +124,6 @@ Inertia.share({
     return ctx.session.flashMessages.get('errors');
   },
 });
-
 ```
 
 ## Configuration
