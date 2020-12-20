@@ -141,5 +141,4 @@ export const inertia: InertiaConfig = {
   view: 'main',
 };
 ...
-
 ```

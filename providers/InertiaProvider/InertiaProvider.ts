@@ -23,6 +23,32 @@ export default class InertiaProvider {
     });
   }
 
+  private registerInertiaTag(View: ViewContract) {
+    View.registerTag({
+      block: false,
+      tagName: 'inertia',
+      seekable: true,
+      compile(parser, buffer, token) {
+        function parseJsArg(parser, token) {
+          return parser.utils.transformAst(
+            parser.utils.generateAST(token.properties.jsArg, token.loc, token.filename),
+            token.filename,
+            parser,
+          );
+        }
+
+        const parsed = parseJsArg(parser, token);
+        buffer.writeExpression(
+          `\n
+          out += template.sharedState.inertia(${parser.utils.stringify(parsed)})
+          `,
+          token.filename,
+          token.loc.start.line,
+        );
+      },
+    });
+  }
+
   /*
    * Hook inertia into ctx during request cycle
    */
@@ -53,6 +79,7 @@ export default class InertiaProvider {
       (HttpContext, View, Config) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
+        this.registerInertiaTag(View);
         this.registerBinding();
       },
     );
