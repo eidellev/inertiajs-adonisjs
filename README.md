@@ -55,11 +55,11 @@ Open `.adonisrc` and add `@eidellev/inertia-adonisjs` to the list of providers:
 
 ### Setting Up View
 
-Add the following snippet to `app.edge`:
+You can set up the inertia root `div` using the `@inertia` tag:
 
-```handlebars
+```blade
 <body>
-  {{{ inertia(data) }}}
+  @inertia(data)
 </body>
 ```
 
@@ -70,7 +70,7 @@ export default class UsersController {
   public async index({ inertia, request }: HttpContextContract) {
     const users = await User.all();
 
-    return inertia.render('Studio/Journeys/IndexPage', { users });
+    return inertia.render('Users/IndexPage', { users });
   }
 }
 ```
