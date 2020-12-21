@@ -59,7 +59,7 @@ You can set up the inertia root `div` using the `@inertia` tag:
 
 ```blade
 <body>
-  @inertia(data)
+  @inertia()
 </body>
 ```
 
