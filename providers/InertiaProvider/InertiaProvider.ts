@@ -4,6 +4,7 @@ import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
 import { ViewContract } from '@ioc:Adonis/Core/View';
 import { ConfigContract } from '@ioc:Adonis/Core/Config';
 import { Inertia } from '../../src/Inertia';
+import { parseJsArg } from './utils';
 
 /*
 |--------------------------------------------------------------------------
@@ -29,15 +30,8 @@ export default class InertiaProvider {
       tagName: 'inertia',
       seekable: true,
       compile(parser, buffer, token) {
-        function parseJsArg(parser, token) {
-          return parser.utils.transformAst(
-            parser.utils.generateAST(token.properties.jsArg, token.loc, token.filename),
-            token.filename,
-            parser,
-          );
-        }
+        const parsed = parseJsArg(parser, token); // get argument name
 
-        const parsed = parseJsArg(parser, token);
         buffer.writeExpression(
           `\n
           out += template.sharedState.inertia(${parser.utils.stringify(parsed)})
