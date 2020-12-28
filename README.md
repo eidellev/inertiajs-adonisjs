@@ -126,6 +126,18 @@ Inertia.share({
 });
 ```
 
+Register the preloaded file in `.adonisrc.json`:
+
+```json
+...
+ "preloads": [
+    "./start/routes",
+    "./start/kernel",
+    "./start/inertia"
+  ],
+...
+```
+
 ## Configuration
 
 By default, `inertia-adonisjs` uses `app.edge` as its view. If you need to change this, add the following to `/config/app.ts`:
@@ -133,9 +145,6 @@ By default, `inertia-adonisjs` uses `app.edge` as its view. If you need to chang
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 ...
-/*
-|--------------------------------------------------------------------------
-| Application secret key
 
 export const inertia: InertiaConfig = {
   view: 'main',
