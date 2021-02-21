@@ -37,27 +37,27 @@
     "@adonisjs/view": "^3.0.9"
   },
   "devDependencies": {
-    "@adonisjs/config": "^2.0.3",
+    "@adonisjs/config": "^3.0.0",
     "@adonisjs/core": "^5.0.1",
-    "@adonisjs/require-ts": "^1.1.1",
+    "@adonisjs/require-ts": "^2.0.2",
     "@adonisjs/view": "^3.1.0",
-    "@poppinss/dev-utils": "^1.0.11",
+    "@poppinss/dev-utils": "^1.1.0",
     "@types/common-tags": "^1.8.0",
     "@types/supertest": "^2.0.10",
-    "adonis-preset-ts": "^1.1.0",
+    "adonis-preset-ts": "^2.0.0",
     "common-tags": "^1.8.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-adonis": "^1.0.15",
-    "eslint-plugin-prettier": "^3.3.0",
-    "husky": "^4.3.6",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^5.0.9",
     "japa": "^3.1.1",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^10.5.4",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "supertest": "^6.0.1",
-    "typescript": "^4.1.3"
+    "supertest": "^6.1.3",
+    "typescript": "^4.1.5"
   }
 }
