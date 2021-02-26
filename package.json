@@ -11,11 +11,12 @@
     "build/adonis-typings",
     "build/providers",
     "build/src",
-    "build/instructions.js"
+    "build/instructions.js",
+    "build/templates"
   ],
   "adonisjs": {
     "types": "@eidellev/inertia-adonisjs",
-    "instructionsMd": "./build/instructions.md",
+    "instructions": "./build/instructions.js",
     "providers": [
       "@eidellev/inertia-adonisjs"
     ]
@@ -25,8 +26,9 @@
     "lint": "tsc --noEmit && eslint . --ext=ts",
     "lint:fix": "eslint . --ext=ts --fix",
     "clean": "rimraf build",
-    "build": "cross-env yarn clean && tsc",
-    "watch": "cross-env yarn clean && tsc -w",
+    "copyfiles": "copyfiles \"templates/**/*.txt\" build",
+    "build": "cross-env yarn clean && yarn copyfiles && tsc",
+    "watch": "cross-env yarn clean && yarn copyfiles && tsc -w",
     "test": "nyc node japaFile.js",
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",
@@ -46,6 +48,7 @@
     "@adonisjs/config": "^3.0.0",
     "@adonisjs/core": "^5.0.1",
     "@adonisjs/require-ts": "^2.0.2",
+    "@adonisjs/sink": "^4.2.2",
     "@adonisjs/view": "^3.1.0",
     "@commitlint/cli": "^12.0.0",
     "@commitlint/config-conventional": "^12.0.0",
@@ -55,6 +58,7 @@
     "@types/supertest": "^2.0.10",
     "adonis-preset-ts": "^2.0.0",
     "common-tags": "^1.8.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.0.0",
