@@ -17,6 +17,14 @@
   "adonisjs": {
     "types": "@eidellev/inertia-adonisjs",
     "instructions": "./build/instructions.js",
+    "preloads": [
+      {
+        "file": "./start/inertia",
+        "environment": [
+          "web"
+        ]
+      }
+    ],
     "providers": [
       "@eidellev/inertia-adonisjs"
     ]

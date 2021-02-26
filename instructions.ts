@@ -31,12 +31,18 @@ export default async function instructions(projectRoot: string, app: Application
 
   const view = await getView(sink);
 
+  /**
+   * Generate inertia config
+   */
   inertiaConfig.overwrite = true;
   inertiaConfig.apply({ view }).commit();
 
   const configDir = app.directoriesMap.get('config') || 'config';
   sink.logger.action('create').succeeded(`${configDir}/inertia.ts`);
 
+  /**
+   * Generate inertia view
+   */
   const viewPath = app.viewsPath(`${view}.edge`);
   const inertiaView = new sink.files.MustacheFile(projectRoot, viewPath, getStub('view.txt'));
 
@@ -44,4 +50,15 @@ export default async function instructions(projectRoot: string, app: Application
   inertiaView.apply({ name: app.appName }).commit();
   const viewsDir = app.directoriesMap.get('views');
   sink.logger.action('create').succeeded(`${viewsDir}/${view}.edge`);
+
+  /**
+   * Generate inertia preload file
+   */
+  const preloadedPath = app.startPath(`inertia.ts`);
+  const inertiaPreload = new sink.files.MustacheFile(projectRoot, preloadedPath, getStub('start.txt'));
+
+  inertiaPreload.overwrite = true;
+  inertiaPreload.apply().commit();
+  const preloadsDir = app.directoriesMap.get('preloads');
+  sink.logger.action('create').succeeded(`${preloadsDir}/inertia.ts`);
 }
