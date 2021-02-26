@@ -1,6 +1,6 @@
 {
   "name": "@eidellev/inertia-adonisjs",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": false,
   "description": "InertiaJS provider for AdonisJS",
   "repository": "https://github.com/eidellev/inertiajs-adonisjs",
