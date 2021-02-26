@@ -10,7 +10,8 @@
   "files": [
     "build/adonis-typings",
     "build/providers",
-    "build/src"
+    "build/src",
+    "build/instructions.js"
   ],
   "adonisjs": {
     "types": "@eidellev/inertia-adonisjs",
@@ -25,6 +26,7 @@
     "lint:fix": "eslint . --ext=ts --fix",
     "clean": "rimraf build",
     "build": "cross-env yarn clean && tsc",
+    "watch": "cross-env yarn clean && tsc -w",
     "test": "nyc node japaFile.js",
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",
