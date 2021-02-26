@@ -6,62 +6,14 @@
 # NPM
 npm i @eidellev/inertia-adonisjs
 
-# Yarn
+# or Yarn
 yarn add @eidellev/inertia-adonisjs
+
+# Register package and generate additional files
+node ace invoke @eidellev/inertia-adonisjs
 ```
 
 ## Usage
-
-### Registering Types
-
-Open your `tsconfig.json` file and add `@eidellev/inertia-adonisjs` to `compilerOptions.types`:
-
-```json
-{
-  "include": ["**/*"],
-  "exclude": [...],
-  "extends": "./node_modules/adonis-preset-ts/tsconfig",
-  "compilerOptions": {
-    ...
-    },
-    "types": [
-      "@adonisjs/core",
-      "@adonisjs/session",
-      "@adonisjs/view",
-      "@adonisjs/lucid",
-      "@eidellev/inertia-adonisjs" // Add this line
-    ]
-  }
-}
-
-```
-
-### Registering Provider
-
-Open `.adonisrc` and add `@eidellev/inertia-adonisjs` to the list of providers:
-
-```json
-...
-"providers": [
-    "./providers/AppProvider",
-    "@adonisjs/core",
-    "@adonisjs/session",
-    "@adonisjs/view",
-    "@adonisjs/lucid",
-    "@eidellev/inertia-adonisjs"
-  ],
-...
-```
-
-### Setting Up View
-
-You can set up the inertia root `div` using the `@inertia` tag:
-
-```blade
-<body>
-  @inertia()
-</body>
-```
 
 ### Making an Inertia Response
 
@@ -112,42 +64,28 @@ export default class ExceptionHandler extends HttpExceptionHandler {
 
 ### Shared Props
 
-In order to add shared props, add the following preloaded file to `start` directory:
+In order to add shared props, edit `start/inertia.ts`:
 
 ```typescript
-// /start/inertia.ts
-
 import Inertia from '@ioc:EidelLev/Inertia';
 
 Inertia.share({
   errors: (ctx) => {
     return ctx.session.flashMessages.get('errors');
   },
+  // Add more shared props here
 });
-```
-
-Register the preloaded file in `.adonisrc.json`:
-
-```json
-...
- "preloads": [
-    "./start/routes",
-    "./start/kernel",
-    "./start/inertia"
-  ],
-...
 ```
 
 ## Configuration
 
-By default, `inertia-adonisjs` uses `app.edge` as its view. If you need to change this, add the following to `/config/app.ts`:
+The configuration for `inertia-adonisjs` is set in `/config/app.ts`:
 
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 ...
 
 export const inertia: InertiaConfig = {
-  view: 'main',
+  view: 'app',
 };
-...
 ```
