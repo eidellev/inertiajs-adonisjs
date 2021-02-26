@@ -44,7 +44,7 @@ export default class InertiaProvider {
    * Hook inertia into ctx during request cycle
    */
   private registerInertia(HttpContext: HttpContextConstructorContract, Config: ConfigContract) {
-    const config = Config.get('app.inertia', { view: 'app' });
+    const config = Config.get('inertia.inertia', { view: 'app' });
 
     HttpContext.getter(
       'inertia',
