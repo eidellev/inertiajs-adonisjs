@@ -11,14 +11,28 @@ function getStub(...relativePaths: string[]) {
 }
 
 /**
+ * Prompts user for view file they wish to use
+ */
+function getView(sink: typeof sinkStatic) {
+  return sink.getPrompt().ask('Select the view you want to use', {
+    default: 'app',
+    validate(view) {
+      return !!view.length || 'This cannot be left empty';
+    },
+  });
+}
+
+/**
  * Instructions to be executed when setting up the package.
  */
 export default async function instructions(projectRoot: string, app: ApplicationContract, sink: typeof sinkStatic) {
   const configPath = app.configPath('inertia.ts');
   const inertiaConfig = new sink.files.MustacheFile(projectRoot, configPath, getStub('inertia.txt'));
 
+  const view = await getView(sink);
+
   inertiaConfig.overwrite = true;
-  inertiaConfig.apply().commit();
+  inertiaConfig.apply({ view }).commit();
 
   const configDir = app.directoriesMap.get('config') || 'config';
   sink.logger.action('create').succeeded(`${configDir}/inertia.ts`);
