@@ -36,4 +36,12 @@ export default async function instructions(projectRoot: string, app: Application
 
   const configDir = app.directoriesMap.get('config') || 'config';
   sink.logger.action('create').succeeded(`${configDir}/inertia.ts`);
+
+  const viewPath = app.viewsPath(`${view}.edge`);
+  const inertiaView = new sink.files.MustacheFile(projectRoot, viewPath, getStub('view.txt'));
+
+  inertiaView.overwrite = true;
+  inertiaView.apply({ name: app.appName }).commit();
+  const viewsDir = app.directoriesMap.get('views');
+  sink.logger.action('create').succeeded(`${viewsDir}/${view}.edge`);
 }
