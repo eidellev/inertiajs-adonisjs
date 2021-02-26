@@ -59,6 +59,6 @@ export default async function instructions(projectRoot: string, app: Application
 
   inertiaPreload.overwrite = true;
   inertiaPreload.apply().commit();
-  const preloadsDir = app.directoriesMap.get('preloads');
+  const preloadsDir = app.directoriesMap.get('start');
   sink.logger.action('create').succeeded(`${preloadsDir}/inertia.ts`);
 }
