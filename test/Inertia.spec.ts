@@ -28,10 +28,8 @@ test.group('Inertia-AdonisJS', (group) => {
       res.end();
     });
 
-    const response = await supertest(server)
-      .get('/')
+    const response = await supertest(server).get('/').expect(200);
 
-      .expect(200);
     assert.equal(
       response.text,
       codeBlock`<!DOCTYPE html>
