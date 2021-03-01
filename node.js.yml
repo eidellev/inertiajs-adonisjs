@@ -5,25 +5,25 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ '*' ]
+    branches: ['*']
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
- lint-and-test:
+  lint-and-test:
     name: Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Install
-      uses: CultureHQ/actions-yarn@master
-      with:
-        args: install
-    - name: Lint
-      uses: CultureHQ/actions-yarn@master
-      with:
-        args: lint
-    - name: Test
-      uses: CultureHQ/actions-yarn@master
-      with:
-        args: test
+      - uses: actions/checkout@master
+      - name: Install
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - name: Lint
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: lint
+      - name: Test
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: test
