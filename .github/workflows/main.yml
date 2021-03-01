@@ -14,16 +14,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Install
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: install
-      - name: Lint
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: lint
-      - name: Test
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: yarn install
+      - run: yarn lint
+      - run: yarn test
