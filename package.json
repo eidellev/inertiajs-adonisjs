@@ -39,8 +39,8 @@
     "watch": "cross-env yarn clean && yarn copyfiles && tsc -w",
     "test": "nyc node japaFile.js",
     "postinstall": "husky install",
-    "prepublishOnly": "pinst --disable",
-    "postpublish": "pinst --enable"
+    "prepublishOnly": "yarn pinst --disable",
+    "postpublish": "yarn pinst --enable"
   },
   "dependencies": {
     "@adonisjs/mrm-preset": "adonisjs/mrm-preset",
