@@ -48,9 +48,9 @@
     "he": "^1.2.0"
   },
   "peerDependencies": {
-    "@adonisjs/config": "^3.0.0",
-    "@adonisjs/core": "^5.0.1",
-    "@adonisjs/view": "^3.0.9"
+    "@adonisjs/config": ">=2",
+    "@adonisjs/core": ">=5",
+    "@adonisjs/view": ">=3"
   },
   "devDependencies": {
     "@adonisjs/config": "^3.0.0",
