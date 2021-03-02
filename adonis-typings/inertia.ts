@@ -16,13 +16,6 @@ declare module '@ioc:EidelLev/Inertia' {
     render(component: string, responseProps?: ResponseProps): Promise<Record<string, unknown> | string>;
 
     /**
-     * Determines if inertia request
-     *
-     * @return     {boolean}  True if inertia, False otherwise.
-     */
-    isInertia(): boolean;
-
-    /**
      * Redirect back with the correct HTTP status code
      */
     redirectBack(): void;
