@@ -1,9 +1,12 @@
 import he from 'he';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
+import { RequestContract, RequestConstructorContract } from '@ioc:Adonis/Core/Request';
 import { ViewContract } from '@ioc:Adonis/Core/View';
 import { ConfigContract } from '@ioc:Adonis/Core/Config';
+import Validator, { ErrorReporterConstructorContract } from '@ioc:Adonis/Core/Validator';
 import { Inertia } from '../../src/Inertia';
+import { inertiaHelper } from '../../src/inertiaHelper';
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +58,19 @@ export default class InertiaProvider {
     );
   }
 
+  /*
+   * Register `inertia` helper on request object
+   */
+  private registerInertiaHelper(request: RequestConstructorContract) {
+    request.getter(
+      'inertia',
+      function inertia() {
+        return () => inertiaHelper(this);
+      },
+      false,
+    );
+  }
+
   /**
    * Registers inertia binding
    */
@@ -64,13 +80,49 @@ export default class InertiaProvider {
     }));
   }
 
+  /**
+   * Registers custom validation negotiator
+   * https://preview.adonisjs.com/releases/core/preview-rc-2#validator
+   */
+  public registerNegotiator({ validator }: typeof Validator) {
+    validator.negotiator(
+      (request: RequestContract): ErrorReporterConstructorContract => {
+        if (request.inertia()) {
+          return validator.reporters.vanilla;
+        }
+
+        if (request.ajax()) {
+          return validator.reporters.api;
+        }
+
+        switch (request.accepts(['html', 'application/vnd.api+json', 'json'])) {
+          case 'html':
+          case null:
+            return validator.reporters.vanilla;
+          case 'json':
+            return validator.reporters.api;
+          case 'application/vnd.api+json':
+            return validator.reporters.jsonapi;
+        }
+      },
+    );
+  }
+
   public boot(): void {
     this.app.container.with(
-      ['Adonis/Core/HttpContext', 'Adonis/Core/View', 'Adonis/Core/Config'],
-      (HttpContext, View, Config) => {
+      [
+        'Adonis/Core/HttpContext',
+        'Adonis/Core/View',
+        'Adonis/Core/Config',
+        'Adonis/Core/Request',
+        'Adonis/Core/Validator',
+      ],
+      (HttpContext, View, Config, Request, Validator) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
         this.registerInertiaTag(View);
+        this.registerInertiaHelper(Request);
+        this.registerNegotiator(Validator);
         this.registerBinding();
       },
     );

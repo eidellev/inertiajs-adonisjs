@@ -1,10 +1,6 @@
 import { ResponseProps, InertiaConfig, InertiaContract, SharedData } from '@ioc:EidelLev/Inertia';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-
-export enum HEADERS {
-  INERTIA_HEADER = 'x-inertia',
-  INERTIA_PARTIAL_DATA_HEADER = 'x-inertia-partial-data',
-}
+import { HEADERS } from './utils';
 
 let sharedData: SharedData = {};
 
@@ -15,15 +11,10 @@ export class Inertia implements InertiaContract {
     sharedData = data;
   }
 
-  public isInertia(): boolean {
-    const { request } = this.ctx;
-    return !!request.header(HEADERS.INERTIA_HEADER);
-  }
-
   public async render(component: string, responseProps?: ResponseProps): Promise<Record<string, unknown> | string> {
     const { view } = this.config;
     const { request, response } = this.ctx;
-    const isInertia = this.isInertia();
+    const isInertia = request.inertia();
     const partialData = (request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER) || '').split(',').filter(Boolean);
     let props: ResponseProps = { ...sharedData, ...responseProps };
 

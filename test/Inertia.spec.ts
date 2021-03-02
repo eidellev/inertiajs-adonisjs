@@ -2,7 +2,8 @@ import test from 'japa';
 import supertest from 'supertest';
 import { createServer } from 'http';
 import { codeBlock } from 'common-tags';
-import { HEADERS, Inertia } from '../src/Inertia';
+import { Inertia } from '../src/Inertia';
+import { HEADERS } from '../src/utils';
 import { setup, teardown } from './utils';
 
 test.group('Inertia-AdonisJS', (group) => {
