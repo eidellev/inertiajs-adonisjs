@@ -83,7 +83,6 @@ The configuration for `inertia-adonisjs` is set in `/config/app.ts`:
 
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
-...
 
 export const inertia: InertiaConfig = {
   view: 'app',
