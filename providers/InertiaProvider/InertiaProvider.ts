@@ -77,6 +77,7 @@ export default class InertiaProvider {
   public registerBinding() {
     this.app.container.singleton('EidelLev/Inertia', () => ({
       share: Inertia.share,
+      version: Inertia.version,
     }));
   }
 

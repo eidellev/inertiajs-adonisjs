@@ -1,22 +1,43 @@
-import { ResponseProps, InertiaConfig, InertiaContract, SharedData } from '@ioc:EidelLev/Inertia';
+import {
+  ResponseProps,
+  InertiaConfig,
+  InertiaContract,
+  SharedData,
+  Version,
+  VersionValue,
+} from '@ioc:EidelLev/Inertia';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import { ResponseContract } from '@ioc:Adonis/Core/Response';
 import { HEADERS } from './utils';
 
-let sharedData: SharedData = {};
-
 export class Inertia implements InertiaContract {
+  private static sharedData: SharedData = {};
+  private static currentVersion: Version;
+
   constructor(private ctx: HttpContextContract, private config: InertiaConfig) {}
 
-  public static share(data: SharedData): void {
-    sharedData = data;
+  public static share(data: SharedData) {
+    Inertia.sharedData = data;
+    return Inertia;
   }
 
-  public async render(component: string, responseProps?: ResponseProps): Promise<Record<string, unknown> | string> {
+  public static version(version: Version) {
+    Inertia.currentVersion = version;
+    return Inertia;
+  }
+
+  public async render(
+    component: string,
+    responseProps?: ResponseProps,
+  ): Promise<Record<string, unknown> | string | ResponseContract> {
     const { view } = this.config;
     const { request, response } = this.ctx;
     const isInertia = request.inertia();
+    response.header(HEADERS.INERTIA_HEADER, 'true');
+
     const partialData = (request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER) || '').split(',').filter(Boolean);
-    let props: ResponseProps = { ...sharedData, ...responseProps };
+    const requestAssetVersion = request.header(HEADERS.INERTIA_VERSION);
+    let props: ResponseProps = { ...Inertia.sharedData, ...responseProps };
 
     // Keep only partial data
     if (partialData.length > 0) {
@@ -45,14 +66,24 @@ export class Inertia implements InertiaContract {
     // Marshall back into an object
     props = Object.fromEntries(result);
 
+    // Get asset version
+    const version = await this.resolveVersion();
     // Keep original request query params
     const queryParams = new URLSearchParams(request.all()).toString();
+    const url = `${request.url()}${queryParams && `?${queryParams}`}`;
     const data = {
       component,
-      // version,
+      version,
       props,
-      url: `${request.url()}${queryParams && `?${queryParams}`}`,
+      url,
     };
+
+    const isGet = request.method() === 'GET';
+    const assetsChanged = requestAssetVersion && requestAssetVersion !== version;
+
+    if (isInertia && isGet && assetsChanged) {
+      return response.status(409).header(HEADERS.INERTIA_LOCATION, url).removeHeader(HEADERS.INERTIA_HEADER);
+    }
 
     if (isInertia) {
       response.header(HEADERS.INERTIA_HEADER, 'true');
@@ -60,6 +91,23 @@ export class Inertia implements InertiaContract {
     }
 
     return this.ctx.view.render(view, { data });
+  }
+
+  /**
+   * Get current asset version
+   */
+  private async resolveVersion(): Promise<VersionValue> {
+    const { currentVersion } = Inertia;
+
+    if (!currentVersion) {
+      return undefined;
+    }
+
+    if (typeof currentVersion !== 'function') {
+      return currentVersion;
+    }
+
+    return await currentVersion();
   }
 
   public redirectBack() {
