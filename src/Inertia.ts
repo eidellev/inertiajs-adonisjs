@@ -30,17 +30,74 @@ export class Inertia implements InertiaContract {
     component: string,
     responseProps?: ResponseProps,
   ): Promise<Record<string, unknown> | string | ResponseContract> {
-    const { view } = this.config;
-    const { request, response } = this.ctx;
+    const { view: inertiaView } = this.config;
+    const { request, response, view } = this.ctx;
     const isInertia = request.inertia();
-    response.header(HEADERS.INERTIA_HEADER, 'true');
-
-    const partialData = (request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER) || '').split(',').filter(Boolean);
+    const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER));
     const requestAssetVersion = request.header(HEADERS.INERTIA_VERSION);
-    let props: ResponseProps = { ...Inertia.sharedData, ...responseProps };
+    const props: ResponseProps = await this.resolveProps({ ...Inertia.sharedData, ...responseProps }, partialData);
 
+    // Get asset version
+    const version = await this.resolveVersion();
+    // Keep original request query params
+    const queryParams = new URLSearchParams(request.all()).toString();
+    const url = `${request.url()}${queryParams && `?${queryParams}`}`;
+    const data = {
+      component,
+      version,
+      props,
+      url,
+    };
+
+    const isGet = request.method() === 'GET';
+    const assetsChanged = requestAssetVersion && requestAssetVersion !== version;
+
+    // Handle asset version update
+    if (isInertia && isGet && assetsChanged) {
+      return response.status(409).header(HEADERS.INERTIA_LOCATION, url);
+    }
+
+    // JSON response
+    if (isInertia) {
+      response.header(HEADERS.INERTIA_HEADER, 'true');
+      return data;
+    }
+
+    // Initial page render
+    response.header(HEADERS.INERTIA_HEADER, 'true');
+    return view.render(inertiaView, { data });
+  }
+
+  /**
+   * Convertes partial data header to an array of values
+   */
+  private resolvePartialData(partialDataHeader?: string): string[] {
+    return (partialDataHeader || '').split(',').filter(Boolean);
+  }
+
+  /**
+   * Get current asset version
+   */
+  private async resolveVersion(): Promise<VersionValue> {
+    const { currentVersion } = Inertia;
+
+    if (!currentVersion) {
+      return undefined;
+    }
+
+    if (typeof currentVersion !== 'function') {
+      return currentVersion;
+    }
+
+    return await currentVersion();
+  }
+
+  /**
+   * Resolves all response prop values
+   */
+  private async resolveProps(props: ResponseProps, partialData: string[]) {
     // Keep only partial data
-    if (partialData.length > 0) {
+    if (partialData.length) {
       const filteredProps = Object.entries(props).filter(([key]) => {
         return partialData.includes(key);
       });
@@ -64,50 +121,7 @@ export class Inertia implements InertiaContract {
     );
 
     // Marshall back into an object
-    props = Object.fromEntries(result);
-
-    // Get asset version
-    const version = await this.resolveVersion();
-    // Keep original request query params
-    const queryParams = new URLSearchParams(request.all()).toString();
-    const url = `${request.url()}${queryParams && `?${queryParams}`}`;
-    const data = {
-      component,
-      version,
-      props,
-      url,
-    };
-
-    const isGet = request.method() === 'GET';
-    const assetsChanged = requestAssetVersion && requestAssetVersion !== version;
-
-    if (isInertia && isGet && assetsChanged) {
-      return response.status(409).header(HEADERS.INERTIA_LOCATION, url).removeHeader(HEADERS.INERTIA_HEADER);
-    }
-
-    if (isInertia) {
-      response.header(HEADERS.INERTIA_HEADER, 'true');
-      return data;
-    }
-
-    return this.ctx.view.render(view, { data });
-  }
-
-  /**
-   * Get current asset version
-   */
-  private async resolveVersion(): Promise<VersionValue> {
-    const { currentVersion } = Inertia;
-
-    if (!currentVersion) {
-      return undefined;
-    }
-
-    if (typeof currentVersion !== 'function') {
-      return currentVersion;
-    }
-
-    return await currentVersion();
+    return Object.fromEntries(result);
   }
 
   public redirectBack() {
