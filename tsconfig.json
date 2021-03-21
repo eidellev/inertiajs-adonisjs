@@ -7,7 +7,8 @@
   "files": [
     "./node_modules/@adonisjs/core/build/adonis-typings/index.d.ts",
     "./node_modules/@adonisjs/view/build/adonis-typings/index.d.ts",
-    "./node_modules/@adonisjs/config/build/adonis-typings/config.d.ts"
+    "./node_modules/@adonisjs/config/build/adonis-typings/config.d.ts",
+    "./node_modules/@adonisjs/session/build/adonis-typings/index.d.ts"
   ],
   "exclude": ["build/*", "node_modules/*"]
 }

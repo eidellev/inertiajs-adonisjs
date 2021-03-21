@@ -49,12 +49,14 @@
     "@adonisjs/config": ">=2",
     "@adonisjs/core": ">=5",
     "@adonisjs/validator": ">=9",
-    "@adonisjs/view": ">=3"
+    "@adonisjs/view": ">=3",
+    "@adonisjs/session": ">=4"
   },
   "devDependencies": {
     "@adonisjs/config": "^3.0.0",
     "@adonisjs/core": "^5.0.1",
     "@adonisjs/require-ts": "^2.0.2",
+    "@adonisjs/session": "^4.0.6",
     "@adonisjs/sink": "^4.2.2",
     "@adonisjs/validator": "^5.0.6",
     "@adonisjs/view": "^3.1.0",

@@ -31,7 +31,7 @@ export class Inertia implements InertiaContract {
     responseProps?: ResponseProps,
   ): Promise<Record<string, unknown> | string | ResponseContract> {
     const { view: inertiaView } = this.config;
-    const { request, response, view } = this.ctx;
+    const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
     const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER));
     const requestAssetVersion = request.header(HEADERS.INERTIA_VERSION);
@@ -54,17 +54,19 @@ export class Inertia implements InertiaContract {
 
     // Handle asset version update
     if (isInertia && isGet && assetsChanged) {
+      session.responseFlashMessages = session.flashMessages;
+      await session.commit();
       return response.status(409).header(HEADERS.INERTIA_LOCATION, url);
     }
 
+    response.header(HEADERS.INERTIA_HEADER, 'true');
+
     // JSON response
     if (isInertia) {
-      response.header(HEADERS.INERTIA_HEADER, 'true');
       return data;
     }
 
     // Initial page render
-    response.header(HEADERS.INERTIA_HEADER, 'true');
     return view.render(inertiaView, { data });
   }
 
