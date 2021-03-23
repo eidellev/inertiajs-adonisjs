@@ -7,19 +7,44 @@ export const fs = new Filesystem(join(__dirname, 'app'));
 
 export async function setup() {
   await fs.add('.env', '');
+
   await fs.add(
     'config/app.ts',
     codeBlock`export const appKey = '${Math.random().toFixed(36).substring(2, 38)}',
     export const http = {
       cookie: {},
       trustProxy: () => true,
-    }
+    }`,
+  );
+
+  await fs.add(
+    'config/inertia.ts',
+    codeBlock`import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 
     export const inertia: InertiaConfig = {
       view: 'app',
-    };
-  `,
+    };`,
   );
+
+  await fs.add(
+    'config/session.ts',
+    codeBlock`import Env from '@ioc:Adonis/Core/Env';
+    import { SessionConfig } from '@ioc:Adonis/Addons/Session';
+
+    const sessionConfig: SessionConfig = {
+      driver: 'cookie',
+      cookieName: 'test',
+      age: '2h',
+      cookie: {
+        path: '/',
+        httpOnly: true,
+        sameSite: false,
+      },
+    }
+
+    export default sessionConfig;`,
+  );
+
   await fs.add(
     'resources/views/app.edge',
     codeBlock`<!DOCTYPE html>
@@ -30,14 +55,14 @@ export async function setup() {
       <title>Journeyman</title>
     </head>
     <body>
-      {{{ inertia(data) }}}
+      @inertia()
     </body>
     </html>
   `,
   );
 
   const app = new Application(fs.basePath, 'web', {
-    providers: ['@adonisjs/core', '@adonisjs/view', '../../providers/InertiaProvider'],
+    providers: ['@adonisjs/core', '@adonisjs/view', '@adonisjs/session', '../../providers/InertiaProvider'],
   });
 
   app.setup();
