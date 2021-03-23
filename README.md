@@ -1,4 +1,4 @@
-# Inertia.js AdonisJS Adapter
+# Inertia.js AdonisJS Provider
 
 ## Installation
 
@@ -27,7 +27,9 @@ export default class UsersController {
 }
 ```
 
-### Shared Props
+### Shared Data
+
+Sometimes you need to access certain data on numerous pages within your application. For example, a common use-case for this is showing the current user in the site header. Passing this data manually in each response isn't practical. In these situations shared data can be useful.
 
 In order to add shared props, edit `start/inertia.ts`:
 
@@ -40,6 +42,21 @@ Inertia.share({
   },
   // Add more shared props here
 });
+```
+
+### Asset Versioning
+
+To enable automatic asset refreshing, you simply need to tell Inertia what the current version of your assets is. This can be any string (letters, numbers, or a file hash), as long as it changes when your assets have been updated.
+
+To configure the current asset version, edit `start/inertia.ts`:
+
+```typescript
+import Inertia from '@ioc:EidelLev/Inertia';
+
+Inertia.version('v1');
+
+// Or as a function:
+Inertia.version(() => 'v2');
 ```
 
 ## Configuration
