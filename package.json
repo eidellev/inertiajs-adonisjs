@@ -1,6 +1,6 @@
 {
   "name": "@eidellev/inertia-adonisjs",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": false,
   "description": "InertiaJS provider for AdonisJS",
   "repository": "https://github.com/eidellev/inertiajs-adonisjs",
@@ -31,14 +31,14 @@
   },
   "license": "MIT",
   "scripts": {
+    "prepare": "husky install",
     "lint": "tsc --noEmit && eslint . --ext=ts",
     "lint:fix": "eslint . --ext=ts --fix",
     "clean": "rimraf build",
     "copyfiles": "copyfiles \"templates/**/*.txt\" build",
     "build": "cross-env yarn clean && yarn copyfiles && tsc",
     "watch": "cross-env yarn clean && yarn copyfiles && tsc -w",
-    "test": "nyc node japaFile.js",
-    "postinstall": "husky install"
+    "test": "nyc node japaFile.js"
   },
   "dependencies": {
     "@adonisjs/mrm-preset": "github:adonisjs/mrm-preset",
