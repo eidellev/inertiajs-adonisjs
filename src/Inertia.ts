@@ -8,7 +8,6 @@ import {
   RenderResponse,
 } from '@ioc:EidelLev/Inertia';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import { ResponseContract } from '@ioc:Adonis/Core/Response';
 import { HEADERS } from './utils';
 
 export class Inertia implements InertiaContract {
@@ -27,7 +26,11 @@ export class Inertia implements InertiaContract {
     return Inertia;
   }
 
-  public async render(component: string, responseProps?: ResponseProps): RenderResponse {
+  public async render(
+    component: string,
+    responseProps: ResponseProps = {},
+    pageOnlyProps: ResponseProps = {},
+  ): RenderResponse {
     const { view: inertiaView } = this.config;
     const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
@@ -40,7 +43,7 @@ export class Inertia implements InertiaContract {
     // Keep original request query params
     const queryParams = new URLSearchParams(request.all()).toString();
     const url = `${request.url()}${queryParams && `?${queryParams}`}`;
-    const data = {
+    const page = {
       component,
       version,
       props,
@@ -61,11 +64,11 @@ export class Inertia implements InertiaContract {
 
     // JSON response
     if (isInertia) {
-      return data;
+      return page;
     }
 
     // Initial page render
-    return view.render(inertiaView, { data });
+    return view.render(inertiaView, { page, ...pageOnlyProps });
   }
 
   /**

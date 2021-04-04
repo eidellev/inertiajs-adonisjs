@@ -27,6 +27,20 @@ export default class UsersController {
 }
 ```
 
+### Root template data
+
+There are situations where you may want to access your prop data in your root Edge template. For example, you may want to add a meta description tag, Twitter card meta tags, or Facebook Open Graph meta tags.
+
+```blade
+<meta name="twitter:title" content="{{ page.title }}">
+```
+
+Sometimes you may even want to provide data that will not be sent to your JavaScript component.
+
+```typescript
+return inertia.render('Users/IndexPage', { users }, { metadata: '...' });
+```
+
 ### Shared Data
 
 Sometimes you need to access certain data on numerous pages within your application. For example, a common use-case for this is showing the current user in the site header. Passing this data manually in each response isn't practical. In these situations shared data can be useful.

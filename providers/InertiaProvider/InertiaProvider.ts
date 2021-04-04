@@ -21,8 +21,8 @@ export default class InertiaProvider {
    * Register the `inertia` view global
    */
   private registerViewGlobal(View: ViewContract) {
-    View.global('inertia', (data: Record<string, unknown>) => {
-      return `<div id="app" data-page="${he.escape(JSON.stringify(data))}"></div>`;
+    View.global('inertia', (page: Record<string, unknown>) => {
+      return `<div id="app" data-page="${he.escape(JSON.stringify(page))}"></div>`;
     });
   }
 
@@ -34,7 +34,7 @@ export default class InertiaProvider {
       compile(_, buffer, token) {
         buffer.writeExpression(
           `\n
-          out += template.sharedState.inertia(state.data)
+          out += template.sharedState.inertia(state.page)
           `,
           token.filename,
           token.loc.start.line,

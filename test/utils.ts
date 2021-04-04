@@ -55,6 +55,9 @@ export async function setup() {
       <title>Journeyman</title>
     </head>
     <body>
+      @if(test)
+        {{ test }}
+      @endif
       @inertia()
     </body>
     </html>

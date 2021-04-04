@@ -46,6 +46,44 @@ test.group('Rendering', (group) => {
     );
   });
 
+  test('Should render HTML with page-only props', async (assert) => {
+    const props = {
+      some: {
+        props: {
+          for: ['your', 'page'],
+        },
+      },
+    };
+    const pageOnlyProps = {
+      test: 'page only prop',
+    };
+    const app = await setup();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      const respose = await ctx.inertia.render('Some/Page', props, pageOnlyProps);
+
+      res.write(respose);
+      res.end();
+    });
+
+    const response = await supertest(server).get('/').expect(200);
+
+    assert.equal(
+      response.text,
+      codeBlock`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Journeyman</title>
+    </head>
+    <body>
+        page only prop<div id="app" data-page="{&quot;component&quot;:&quot;Some/Page&quot;,&quot;props&quot;:{&quot;some&quot;:{&quot;props&quot;:{&quot;for&quot;:[&quot;your&quot;,&quot;page&quot;]}}},&quot;url&quot;:&quot;/&quot;}"></div>
+    </body>
+    </html>`,
+    );
+  });
+
   test('Should return JSON', async (assert) => {
     const props = {
       some: {
