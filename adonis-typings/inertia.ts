@@ -27,7 +27,7 @@ declare module '@ioc:EidelLev/Inertia' {
      * @param      {string}         component      Page component
      * @param      {ResponseProps}  responseProps  Props
      */
-    render(component: string, responseProps?: ResponseProps): RenderResponse;
+    render(component: string, responseProps?: ResponseProps, pageOnlyProps?: ResponseProps): RenderResponse;
 
     /**
      * Redirect back with the correct HTTP status code
