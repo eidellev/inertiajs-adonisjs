@@ -3,6 +3,7 @@ declare module '@ioc:EidelLev/Inertia' {
   import { ResponseContract } from '@ioc:Adonis/Core/Response';
 
   export type ResponseProps = Record<string, unknown>;
+  export type RenderResponse = Promise<Record<string, unknown> | string | ResponseContract>;
 
   /**
    * Shared data types
@@ -26,10 +27,7 @@ declare module '@ioc:EidelLev/Inertia' {
      * @param      {string}         component      Page component
      * @param      {ResponseProps}  responseProps  Props
      */
-    render(
-      component: string,
-      responseProps?: ResponseProps,
-    ): Promise<Record<string, unknown> | string | ResponseContract>;
+    render(component: string, responseProps?: ResponseProps): RenderResponse;
 
     /**
      * Redirect back with the correct HTTP status code

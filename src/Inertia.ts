@@ -5,6 +5,7 @@ import {
   SharedData,
   Version,
   VersionValue,
+  RenderResponse,
 } from '@ioc:EidelLev/Inertia';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { ResponseContract } from '@ioc:Adonis/Core/Response';
@@ -26,10 +27,7 @@ export class Inertia implements InertiaContract {
     return Inertia;
   }
 
-  public async render(
-    component: string,
-    responseProps?: ResponseProps,
-  ): Promise<Record<string, unknown> | string | ResponseContract> {
+  public async render(component: string, responseProps?: ResponseProps): RenderResponse {
     const { view: inertiaView } = this.config;
     const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
