@@ -58,6 +58,17 @@ Inertia.share({
 });
 ```
 
+### Route Helper
+
+If you have a page that doesn't need a corresponding controller method, like an FAQ or about page, you can route directly to a component.
+
+```typescript
+// /start/routes.ts
+import Route from '@ioc:Adonis/Core/Route';
+
+Route.inertia('about', 'About');
+```
+
 ### Asset Versioning
 
 To enable automatic asset refreshing, you simply need to tell Inertia what the current version of your assets is. This can be any string (letters, numbers, or a file hash), as long as it changes when your assets have been updated.

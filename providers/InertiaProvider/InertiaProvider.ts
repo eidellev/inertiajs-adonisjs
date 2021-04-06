@@ -1,6 +1,7 @@
 import he from 'he';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
+import { RouterContract } from '@ioc:Adonis/Core/Route';
 import { RequestContract, RequestConstructorContract } from '@ioc:Adonis/Core/Request';
 import { ViewContract } from '@ioc:Adonis/Core/View';
 import { ConfigContract } from '@ioc:Adonis/Core/Config';
@@ -109,6 +110,19 @@ export default class InertiaProvider {
     );
   }
 
+  /**
+   * Registers the Inertia route helper, allowing
+   */
+  public registerRouteHelper(Route: RouterContract): void {
+    Route.inertia = (pattern: string, component: string) => {
+      Route.get(pattern, ({ inertia }) => {
+        return inertia.render(component);
+      });
+
+      return Route;
+    };
+  }
+
   public boot(): void {
     this.app.container.with(
       [
@@ -117,14 +131,16 @@ export default class InertiaProvider {
         'Adonis/Core/Config',
         'Adonis/Core/Request',
         'Adonis/Core/Validator',
+        'Adonis/Core/Route',
       ],
-      (HttpContext, View, Config, Request, Validator) => {
+      (HttpContext, View, Config, Request, Validator, Route) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
         this.registerInertiaTag(View);
         this.registerInertiaHelper(Request);
         this.registerNegotiator(Validator);
         this.registerBinding();
+        this.registerRouteHelper(Route);
       },
     );
   }
