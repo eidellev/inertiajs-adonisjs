@@ -13,9 +13,7 @@ yarn add @eidellev/inertia-adonisjs
 node ace invoke @eidellev/inertia-adonisjs
 ```
 
-## Usage
-
-### Making an Inertia Response
+## Making an Inertia Response
 
 ```typescript
 export default class UsersController {
@@ -27,7 +25,7 @@ export default class UsersController {
 }
 ```
 
-### Root template data
+## Root template data
 
 There are situations where you may want to access your prop data in your root Edge template. For example, you may want to add a meta description tag, Twitter card meta tags, or Facebook Open Graph meta tags.
 
@@ -41,7 +39,7 @@ Sometimes you may even want to provide data that will not be sent to your JavaSc
 return inertia.render('Users/IndexPage', { users }, { metadata: '...' });
 ```
 
-### Shared Data
+## Shared Data
 
 Sometimes you need to access certain data on numerous pages within your application. For example, a common use-case for this is showing the current user in the site header. Passing this data manually in each response isn't practical. In these situations shared data can be useful.
 
@@ -58,7 +56,7 @@ Inertia.share({
 });
 ```
 
-### Route Helper
+## Route Helper
 
 If you have a page that doesn't need a corresponding controller method, like an FAQ or about page, you can route directly to a component.
 
@@ -68,6 +66,20 @@ import Route from '@ioc:Adonis/Core/Route';
 
 Route.inertia('about', 'About');
 ```
+
+## Redirects
+
+### External redirects
+
+Sometimes it's necessary to redirect to an external website, or even another non-Inertia endpoint in your app, within an Inertia request. This is possible using a server-side initiated window.location visit.
+
+```typescript
+Route.get('redirect', async ({ inertia }) => {
+  inertia.location('https://inertiajs.com/redirects');
+});
+```
+
+## Advanced
 
 ### Asset Versioning
 
@@ -84,7 +96,7 @@ Inertia.version('v1');
 Inertia.version(() => 'v2');
 ```
 
-## Configuration
+### Configuration
 
 The configuration for `inertia-adonisjs` is set in `/config/app.ts`:
 
