@@ -124,6 +124,7 @@ export default class InertiaProvider {
   }
 
   public boot(): void {
+    // TODO: replace with `withBindings`
     this.app.container.with(
       [
         'Adonis/Core/HttpContext',

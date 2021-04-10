@@ -68,8 +68,8 @@ export async function setup() {
     providers: ['@adonisjs/core', '@adonisjs/view', '@adonisjs/session', '../../providers/InertiaProvider'],
   });
 
-  app.setup();
-  app.registerProviders();
+  await app.setup();
+  await app.registerProviders();
   await app.bootProviders();
 
   return app;
