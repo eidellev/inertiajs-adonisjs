@@ -132,4 +132,15 @@ export class Inertia implements InertiaContract {
 
     response.status(303).redirect().back();
   }
+
+  /**
+   * Server initiated external redirect
+   *
+   * @param      {string}  url     The external URL
+   */
+  public location(url: string) {
+    const { response } = this.ctx;
+
+    response.header(HEADERS.INERTIA_LOCATION, url).conflict();
+  }
 }
