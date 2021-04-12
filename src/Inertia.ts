@@ -34,9 +34,15 @@ export class Inertia implements InertiaContract {
     const { view: inertiaView } = this.config;
     const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
-    const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA_HEADER));
+    const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA));
+    const partialDataComponentHeader = request.header(HEADERS.INERTIA_PARTIAL_DATA_COMPONENT);
     const requestAssetVersion = request.header(HEADERS.INERTIA_VERSION);
-    const props: ResponseProps = await this.resolveProps({ ...Inertia.sharedData, ...responseProps }, partialData);
+    const props: ResponseProps = await this.resolveProps(
+      { ...Inertia.sharedData, ...responseProps },
+      partialData,
+      component,
+      partialDataComponentHeader,
+    );
 
     // Get asset version
     const version = await this.resolveVersion();
@@ -98,9 +104,14 @@ export class Inertia implements InertiaContract {
   /**
    * Resolves all response prop values
    */
-  private async resolveProps(props: ResponseProps, partialData: string[]) {
+  private async resolveProps(
+    props: ResponseProps,
+    partialData: string[],
+    component: string,
+    partialDataComponentHeader?: string,
+  ) {
     // Keep only partial data
-    if (partialData.length) {
+    if (partialData.length && component === partialDataComponentHeader) {
       const filteredProps = Object.entries(props).filter(([key]) => {
         return partialData.includes(key);
       });
