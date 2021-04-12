@@ -102,7 +102,8 @@ test.group('Data', (group) => {
     const response = await supertest(server)
       .get('/')
       .set(HEADERS.INERTIA_HEADER, 'true')
-      .set(HEADERS.INERTIA_PARTIAL_DATA_HEADER, 'partial,another')
+      .set(HEADERS.INERTIA_PARTIAL_DATA, 'partial,another')
+      .set(HEADERS.INERTIA_PARTIAL_DATA_COMPONENT, 'Some/Page')
       .expect(200);
 
     assert.deepEqual(response.body, {
@@ -110,6 +111,50 @@ test.group('Data', (group) => {
       props: {
         another: 'prop',
         partial: 1234,
+      },
+      url: '/',
+    });
+  });
+
+  test('Should return full data', async (assert) => {
+    const props = {
+      some() {
+        return {
+          props: {
+            for: ['your', 'page'],
+          },
+        };
+      },
+      another: 'prop',
+      partial: 1234,
+    };
+    const app = await setup();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      const response = await ctx.inertia.render('Some/Page', props);
+
+      res.setHeader('Content-Type', 'application/json');
+      res.write(JSON.stringify(response));
+      res.end();
+    });
+
+    const response = await supertest(server)
+      .get('/')
+      .set(HEADERS.INERTIA_HEADER, 'true')
+      .set(HEADERS.INERTIA_PARTIAL_DATA, 'partial,another')
+      .set(HEADERS.INERTIA_PARTIAL_DATA_COMPONENT, 'Some/Other/Page')
+      .expect(200);
+
+    assert.deepEqual(response.body, {
+      component: 'Some/Page',
+      props: {
+        another: 'prop',
+        partial: 1234,
+        some: {
+          props: {
+            for: ['your', 'page'],
+          },
+        },
       },
       url: '/',
     });
