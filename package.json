@@ -40,7 +40,6 @@
     "test": "nyc node japaFile.js"
   },
   "dependencies": {
-    "@adonisjs/mrm-preset": "github:adonisjs/mrm-preset",
     "@types/he": "^1.1.1",
     "he": "^1.2.0"
   },
@@ -54,6 +53,7 @@
   "devDependencies": {
     "@adonisjs/config": "^3.0.1",
     "@adonisjs/core": "^5.1.4",
+    "@adonisjs/mrm-preset": "^3.0.0",
     "@adonisjs/require-ts": "^2.0.3",
     "@adonisjs/session": "^4.0.6",
     "@adonisjs/sink": "^4.2.2",
