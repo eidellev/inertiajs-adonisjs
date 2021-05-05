@@ -35,8 +35,8 @@
     "lint:fix": "eslint . --ext=ts --fix",
     "clean": "rimraf build",
     "copyfiles": "copyfiles \"templates/**/*.txt\" build",
-    "build": "cross-env yarn clean && yarn copyfiles && tsc",
-    "watch": "cross-env yarn clean && yarn copyfiles && tsc -w",
+    "build": "cross-env npm run clean && npm run copyfiles && tsc",
+    "watch": "cross-env npm run clean && npm run copyfiles && tsc -w",
     "test": "nyc node japaFile.js"
   },
   "dependencies": {
