@@ -2,6 +2,25 @@ import { join } from 'path';
 import * as sinkStatic from '@adonisjs/sink';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 
+const ADAPTER_PROMPT_CHOICES = [
+  {
+    name: 'VUE2' as const,
+    message: 'Vue 2',
+  },
+  {
+    name: 'VUE3' as const,
+    message: 'Vue 3',
+  },
+  {
+    name: 'REACT' as const,
+    message: 'React',
+  },
+  {
+    name: 'SVELTE' as const,
+    message: 'Svelte',
+  },
+];
+
 /**
  * Returns absolute path to the stub relative from the templates
  * directory
@@ -23,13 +42,39 @@ function getView(sink: typeof sinkStatic) {
 }
 
 /**
+ * Asks user of they would like to install the client-side inertia library
+ */
+function getInstallInertiaUserPref(sink: typeof sinkStatic) {
+  return sink.getPrompt().confirm('Would you like to install Inertia.js?', {
+    default: true,
+  });
+}
+
+/**
+ * Prompts user for their preferred inertia client-side adapter
+ */
+function getInertiaAdapterPref(sink: typeof sinkStatic) {
+  return sink.getPrompt().choice('Which client-side adapter would you like to set up?', ADAPTER_PROMPT_CHOICES, {
+    validate(choices) {
+      return choices && choices.length ? true : 'Please select an adapter to continue';
+    },
+  });
+}
+
+/**
  * Instructions to be executed when setting up the package.
  */
 export default async function instructions(projectRoot: string, app: ApplicationContract, sink: typeof sinkStatic) {
   const configPath = app.configPath('inertia.ts');
   const inertiaConfig = new sink.files.MustacheFile(projectRoot, configPath, getStub('inertia.txt'));
-
   const view = await getView(sink);
+
+  const shouldInstallInertia = await getInstallInertiaUserPref(sink);
+
+  if (shouldInstallInertia) {
+    // @ts-ignore
+    const adapter = await getInertiaAdapterPref(sink);
+  }
 
   /**
    * Generate inertia config
