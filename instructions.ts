@@ -4,19 +4,19 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 
 const ADAPTER_PROMPT_CHOICES = [
   {
-    name: 'VUE2' as const,
+    name: '@inertiajs/inertia-vue' as const,
     message: 'Vue 2',
   },
   {
-    name: 'VUE3' as const,
+    name: '@inertiajs/inertia-vue3' as const,
     message: 'Vue 3',
   },
   {
-    name: 'REACT' as const,
+    name: '@inertiajs/inertia-react' as const,
     message: 'React',
   },
   {
-    name: 'SVELTE' as const,
+    name: '@inertiajs/inertia-svelte' as const,
     message: 'Svelte',
   },
 ];
@@ -72,8 +72,30 @@ export default async function instructions(projectRoot: string, app: Application
   const shouldInstallInertia = await getInstallInertiaUserPref(sink);
 
   if (shouldInstallInertia) {
-    // @ts-ignore
     const adapter = await getInertiaAdapterPref(sink);
+
+    /**
+     * Install required dependencies
+     */
+    const pkg = new sink.files.PackageJsonFile(projectRoot);
+    pkg.install('@inertiajs/inertia');
+    pkg.install(adapter);
+
+    /**
+     * Find the list of packages we have to remove
+     */
+
+    const spinner = sink.logger.await(`Installing @inertia/inertia and ${adapter}`);
+
+    try {
+      await pkg.commitAsync();
+      spinner.update('Packages installed');
+    } catch (error) {
+      spinner.update('Unable to install packages');
+      sink.logger.fatal(error);
+    }
+
+    spinner.stop();
   }
 
   /**
