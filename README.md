@@ -24,10 +24,17 @@ npm i @eidellev/inertia-adonisjs
 
 # or Yarn
 yarn add @eidellev/inertia-adonisjs
+```
 
-# Register package and generate additional files
+## Setup
+
+You can register the package, generate additional files and install additional depdencies by running:
+
+```shell
 node ace invoke @eidellev/inertia-adonisjs
 ```
+
+![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
 
 ## Making an Inertia Response
 
