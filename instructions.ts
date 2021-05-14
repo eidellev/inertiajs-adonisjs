@@ -33,7 +33,7 @@ function getStub(...relativePaths: string[]) {
  * Prompts user for view file they wish to use
  */
 function getView(sink: typeof sinkStatic) {
-  return sink.getPrompt().ask('Select the view you want to use', {
+  return sink.getPrompt().ask('Select the view you would like to use', {
     default: 'app',
     validate(view) {
       return !!view.length || 'This cannot be left empty';
@@ -78,18 +78,19 @@ export default async function instructions(projectRoot: string, app: Application
      * Install required dependencies
      */
     const pkg = new sink.files.PackageJsonFile(projectRoot);
-    pkg.install('@inertiajs/inertia');
-    pkg.install(adapter);
+    pkg.install('@inertiajs/inertia', undefined, false);
+    pkg.install(adapter, undefined, false);
 
     /**
      * Find the list of packages we have to remove
      */
-
-    const spinner = sink.logger.await(`Installing @inertia/inertia and ${adapter}`);
+    const packages = ['@inertia/inertia', adapter].map((p) => sink.logger.colors.green(p)).join(', ');
+    const spinner = sink.logger.await(`Installing ${packages}`);
 
     try {
       await pkg.commitAsync();
       spinner.update('Packages installed');
+      sink.logger.success('All done!');
     } catch (error) {
       spinner.update('Unable to install packages');
       sink.logger.fatal(error);
