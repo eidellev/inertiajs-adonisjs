@@ -44,11 +44,7 @@
     "he": "^1.2.0"
   },
   "peerDependencies": {
-    "@adonisjs/config": ">=2",
-    "@adonisjs/core": ">=5",
-    "@adonisjs/validator": ">=9",
-    "@adonisjs/view": ">=3",
-    "@adonisjs/session": ">=4"
+    "@adonisjs/core": ">=5"
   },
   "devDependencies": {
     "@adonisjs/config": "^3.0.2",
