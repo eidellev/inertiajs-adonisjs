@@ -87,31 +87,29 @@ export default class InertiaProvider {
    * https://preview.adonisjs.com/releases/core/preview-rc-2#validator
    */
   public registerNegotiator({ validator }: typeof Validator) {
-    validator.negotiator(
-      (request: RequestContract): ErrorReporterConstructorContract => {
-        if (request.inertia()) {
+    validator.negotiator((request: RequestContract): ErrorReporterConstructorContract => {
+      if (request.inertia()) {
+        return validator.reporters.vanilla;
+      }
+
+      if (request.ajax()) {
+        return validator.reporters.api;
+      }
+
+      switch (request.accepts(['html', 'application/vnd.api+json', 'json'])) {
+        case 'html':
+        case null:
           return validator.reporters.vanilla;
-        }
-
-        if (request.ajax()) {
+        case 'json':
           return validator.reporters.api;
-        }
-
-        switch (request.accepts(['html', 'application/vnd.api+json', 'json'])) {
-          case 'html':
-          case null:
-            return validator.reporters.vanilla;
-          case 'json':
-            return validator.reporters.api;
-          case 'application/vnd.api+json':
-            return validator.reporters.jsonapi;
-        }
-      },
-    );
+        case 'application/vnd.api+json':
+          return validator.reporters.jsonapi;
+      }
+    });
   }
 
   /**
-   * Registers the Inertia route helper, allowing
+   * Registers the Inertia route helper
    */
   public registerRouteHelper(Route: RouterContract): void {
     Route.inertia = (pattern: string, component: string) => {
@@ -124,8 +122,7 @@ export default class InertiaProvider {
   }
 
   public boot(): void {
-    // TODO: replace with `withBindings`
-    this.app.container.with(
+    this.app.container.withBindings(
       [
         'Adonis/Core/HttpContext',
         'Adonis/Core/View',
