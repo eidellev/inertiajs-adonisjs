@@ -23,9 +23,9 @@ test.group('Rendering', (group) => {
     const app = await setup();
     const server = createServer(async (req, res) => {
       const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
-      const respose = await ctx.inertia.render('Some/Page', props);
+      const response = await ctx.inertia.render('Some/Page', props);
 
-      res.write(respose);
+      res.write(response);
       res.end();
     });
 
@@ -60,9 +60,9 @@ test.group('Rendering', (group) => {
     const app = await setup();
     const server = createServer(async (req, res) => {
       const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
-      const respose = await ctx.inertia.render('Some/Page', props, pageOnlyProps);
+      const response = await ctx.inertia.render('Some/Page', props, pageOnlyProps);
 
-      res.write(respose);
+      res.write(response);
       res.end();
     });
 
