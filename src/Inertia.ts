@@ -70,6 +70,7 @@ export class Inertia implements InertiaContract {
 
     // JSON response
     if (isInertia) {
+      response.header(HEADERS.VARY, 'Accept');
       return page;
     }
 
@@ -78,7 +79,7 @@ export class Inertia implements InertiaContract {
   }
 
   /**
-   * Convertes partial data header to an array of values
+   * Converts partial data header to an array of values
    */
   private resolvePartialData(partialDataHeader?: string): string[] {
     return (partialDataHeader || '').split(',').filter(Boolean);
