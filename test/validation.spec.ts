@@ -26,11 +26,16 @@ test.group('Validation negotiator', (group) => {
       await ctx.request.validate(Validator);
     } catch (error) {
       assert.deepEqual(error.messages, {
-        username: ['required validation failed'],
+        errors: [
+          {
+            field: 'username',
+            message: 'required validation failed',
+            rule: 'required',
+          },
+        ],
       });
     }
   });
-
   test('Should use vanilla validator for HTML requests', async (assert) => {
     const app = await setup();
     const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {});
