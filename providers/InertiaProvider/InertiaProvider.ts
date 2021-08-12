@@ -79,6 +79,7 @@ export default class InertiaProvider {
     this.app.container.singleton('EidelLev/Inertia', () => ({
       share: Inertia.share,
       version: Inertia.version,
+      manifestFile: Inertia.manifestFile,
     }));
   }
 

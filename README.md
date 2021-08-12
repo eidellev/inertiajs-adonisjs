@@ -115,8 +115,14 @@ import Inertia from '@ioc:EidelLev/Inertia';
 
 Inertia.version('v1');
 
-// Or as a function:
+// You can also pass a function that will be lazily evaluated:
 Inertia.version(() => 'v2');
+```
+
+If you are using Adonis's built-in assets manager `webpack encore` you can also pass the path to the manifest file to Inertia and the current version will be set automatically:
+
+```
+Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
 ```
 
 ### Configuration
