@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises';
+import md5 from 'md5';
 import {
   ResponseProps,
   InertiaConfig,
@@ -19,6 +21,18 @@ export class Inertia implements InertiaContract {
   public static share(data: SharedData) {
     Inertia.sharedData = data;
     return Inertia;
+  }
+
+  public static async manifestFile(path: string) {
+    try {
+      const buffer = await readFile(path);
+
+      return md5(buffer);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('Manifest file could not be read');
+      return '';
+    }
   }
 
   public static version(version: Version) {

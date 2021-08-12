@@ -48,6 +48,13 @@ declare module '@ioc:EidelLev/Inertia' {
      * Asset tracking
      */
     version: (currentVersion: string | number | LazyVersion) => InertiaGlobal;
+
+    /**
+     * Returns md5 hash for manifest file at path
+     * Can be used to automatically determine asset version
+     * @param path manifest file path
+     */
+    manifestFile: (path: string) => string;
   }
 
   const Inertia: InertiaGlobal;
