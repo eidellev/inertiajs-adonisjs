@@ -1,4 +1,4 @@
-import he from 'he';
+import { encode } from 'html-entities';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
 import { RouterContract } from '@ioc:Adonis/Core/Route';
@@ -23,7 +23,7 @@ export default class InertiaProvider {
    */
   private registerViewGlobal(View: ViewContract) {
     View.global('inertia', (page: Record<string, unknown>) => {
-      return `<div id="app" data-page="${he.escape(JSON.stringify(page))}"></div>`;
+      return `<div id="app" data-page="${encode(JSON.stringify(page))}"></div>`;
     });
   }
 
