@@ -40,8 +40,7 @@
     "test": "nyc node japaFile.js"
   },
   "dependencies": {
-    "@types/he": "^1.1.2",
-    "he": "^1.2.0"
+    "html-entities": "^2.3.2"
   },
   "peerDependencies": {
     "@adonisjs/core": ">=5"
