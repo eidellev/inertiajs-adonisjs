@@ -8,6 +8,7 @@ import { ConfigContract } from '@ioc:Adonis/Core/Config';
 import Validator, { ErrorReporterConstructorContract } from '@ioc:Adonis/Core/Validator';
 import { Inertia } from '../../src/Inertia';
 import { inertiaHelper } from '../../src/inertiaHelper';
+import { ResponseProps } from '@ioc:EidelLev/Inertia';
 
 /*
 |--------------------------------------------------------------------------
@@ -113,9 +114,9 @@ export default class InertiaProvider {
    * Registers the Inertia route helper
    */
   public registerRouteHelper(Route: RouterContract): void {
-    Route.inertia = (pattern: string, component: string) => {
+    Route.inertia = (pattern: string, component: string, pageOnlyProps: ResponseProps = {}) => {
       Route.get(pattern, ({ inertia }) => {
-        return inertia.render(component);
+        return inertia.render(component, {}, pageOnlyProps);
       });
 
       return Route;
