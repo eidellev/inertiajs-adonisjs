@@ -31,7 +31,7 @@ yarn add @eidellev/inertia-adonisjs
 You can register the package, generate additional files and install additional depdencies by running:
 
 ```shell
-node ace invoke @eidellev/inertia-adonisjs
+node ace configure @eidellev/inertia-adonisjs
 ```
 
 ![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
@@ -121,7 +121,7 @@ Inertia.version(() => 'v2');
 
 If you are using Adonis's built-in assets manager `webpack encore` you can also pass the path to the manifest file to Inertia and the current version will be set automatically:
 
-```
+```typescript
 Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
 ```
 
