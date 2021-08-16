@@ -59,7 +59,7 @@ There are situations where you may want to access your prop data in your root Ed
 Sometimes you may even want to provide data that will not be sent to your JavaScript component.
 
 ```typescript
-return inertia.render('Users/IndexPage', { users }, { metadata: '...' });
+return inertia.render('Users/IndexPage', { users }, {  metadata: '...' : '...' });
 ```
 
 ## Shared Data
@@ -88,6 +88,9 @@ If you have a page that doesn't need a corresponding controller method, like an 
 import Route from '@ioc:Adonis/Core/Route';
 
 Route.inertia('about', 'About');
+
+// You can also pass root template data as the third parameter:
+Route.inertia('about', 'About', { metadata: '...' });
 ```
 
 ## Redirects
@@ -119,7 +122,7 @@ Inertia.version('v1');
 Inertia.version(() => 'v2');
 ```
 
-If you are using Adonis's built-in assets manager `webpack encore` you can also pass the path to the manifest file to Inertia and the current version will be set automatically:
+If you are using Adonis's built-in assets manager [webpack encore](https://docs.adonisjs.com/guides/assets-manager) you can also pass the path to the manifest file to Inertia and the current version will be set automatically:
 
 ```typescript
 Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
