@@ -60,9 +60,16 @@ export class Inertia implements InertiaContract {
 
     // Get asset version
     const version = await this.resolveVersion();
-    // Keep original request query params
+
+    const isGet = request.method() === 'GET';
     const queryParams = new URLSearchParams(request.all()).toString();
-    const url = `${request.url()}${queryParams && `?${queryParams}`}`;
+    let url = request.url();
+
+    if (isGet && queryParams) {
+      // Keep original request query params
+      url += `?${queryParams}`;
+    }
+
     const page = {
       component,
       version,
@@ -70,7 +77,6 @@ export class Inertia implements InertiaContract {
       url,
     };
 
-    const isGet = request.method() === 'GET';
     const assetsChanged = requestAssetVersion && requestAssetVersion !== version;
 
     // Handle asset version update
