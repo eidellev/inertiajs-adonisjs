@@ -1,14 +1,17 @@
-import { encode } from 'html-entities';
+import { Redirect } from '@adonisjs/http-server/build/src/Redirect';
 import { ApplicationContract } from '@ioc:Adonis/Core/Application';
-import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
-import { RouterContract } from '@ioc:Adonis/Core/Route';
-import { RequestContract, RequestConstructorContract } from '@ioc:Adonis/Core/Request';
-import { ViewContract } from '@ioc:Adonis/Core/View';
 import { ConfigContract } from '@ioc:Adonis/Core/Config';
+import { HttpContextConstructorContract } from '@ioc:Adonis/Core/HttpContext';
+import { RequestConstructorContract, RequestContract } from '@ioc:Adonis/Core/Request';
+import { RedirectContract, ResponseConstructorContract } from '@ioc:Adonis/Core/Response';
+import { RouterContract } from '@ioc:Adonis/Core/Route';
 import Validator, { ErrorReporterConstructorContract } from '@ioc:Adonis/Core/Validator';
+import { ViewContract } from '@ioc:Adonis/Core/View';
+import { ResponseProps } from '@ioc:EidelLev/Inertia';
+import { encode } from 'html-entities';
 import { Inertia } from '../../src/Inertia';
 import { inertiaHelper } from '../../src/inertiaHelper';
-import { ResponseProps } from '@ioc:EidelLev/Inertia';
+import { HEADERS } from '../../src/utils';
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +126,37 @@ export default class InertiaProvider {
     };
   }
 
+  public handleRedirects(Response: ResponseConstructorContract) {
+    Response.macro(
+      'redirect',
+      function (path?: string, forwardQueryString: boolean = false, statusCode = 302): RedirectContract | void {
+        const isInertia = this.request.rawHeaders.includes(HEADERS.INERTIA_HEADER);
+        let finalStatusCode = statusCode;
+
+        if (isInertia && statusCode === 302) {
+          finalStatusCode = 303;
+        }
+
+        // @ts-ignore
+        const handler = new Redirect(this.request, this, this.router);
+
+        if (forwardQueryString) {
+          handler.withQs();
+        }
+
+        if (path === 'back') {
+          return handler.status(finalStatusCode).back();
+        }
+
+        if (path) {
+          return handler.status(finalStatusCode).toPath(path);
+        }
+
+        return handler;
+      },
+    );
+  }
+
   public boot(): void {
     this.app.container.withBindings(
       [
@@ -130,14 +164,16 @@ export default class InertiaProvider {
         'Adonis/Core/View',
         'Adonis/Core/Config',
         'Adonis/Core/Request',
+        'Adonis/Core/Response',
         'Adonis/Core/Validator',
         'Adonis/Core/Route',
       ],
-      (HttpContext, View, Config, Request, Validator, Route) => {
+      (HttpContext, View, Config, Request, Response, Validator, Route) => {
         this.registerInertia(HttpContext, Config);
         this.registerViewGlobal(View);
         this.registerInertiaTag(View);
         this.registerInertiaHelper(Request);
+        this.handleRedirects(Response);
         this.registerNegotiator(Validator);
         this.registerBinding();
         this.registerRouteHelper(Route);
