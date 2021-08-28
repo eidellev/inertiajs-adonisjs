@@ -126,6 +126,10 @@ export default class InertiaProvider {
     };
   }
 
+  /**
+   * Set HTTP code 303 after a PUT, PATCH or POST request so the redirect is treated as GET request
+   * https://inertiajs.com/redirects#303-response-code
+   */
   public registerRedirect(Response: ResponseConstructorContract) {
     Response.macro(
       'redirect',
