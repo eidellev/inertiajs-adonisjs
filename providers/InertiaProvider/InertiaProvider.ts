@@ -126,7 +126,7 @@ export default class InertiaProvider {
     };
   }
 
-  public handleRedirects(Response: ResponseConstructorContract) {
+  public registerRedirect(Response: ResponseConstructorContract) {
     Response.macro(
       'redirect',
       function (path?: string, forwardQueryString: boolean = false, statusCode = 302): RedirectContract | void {
@@ -152,6 +152,8 @@ export default class InertiaProvider {
           return handler.status(finalStatusCode).toPath(path);
         }
 
+        handler.status(finalStatusCode);
+
         return handler;
       },
     );
@@ -173,7 +175,7 @@ export default class InertiaProvider {
         this.registerViewGlobal(View);
         this.registerInertiaTag(View);
         this.registerInertiaHelper(Request);
-        this.handleRedirects(Response);
+        this.registerRedirect(Response);
         this.registerNegotiator(Validator);
         this.registerBinding();
         this.registerRouteHelper(Route);
