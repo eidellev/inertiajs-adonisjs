@@ -135,9 +135,10 @@ export default class InertiaProvider {
       'redirect',
       function (path?: string, forwardQueryString: boolean = false, statusCode = 302): RedirectContract | void {
         const isInertia = this.request.rawHeaders.includes(HEADERS.INERTIA_HEADER);
+        const method = this.request.method;
         let finalStatusCode = statusCode;
 
-        if (isInertia && statusCode === 302) {
+        if (isInertia && statusCode === 302 && method && method && ['PUT', 'PATCH', 'DELETE'].includes(method)) {
           finalStatusCode = 303;
         }
 
