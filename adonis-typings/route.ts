@@ -10,6 +10,6 @@ declare module '@ioc:Adonis/Core/Route' {
      * @param      {ResponseProps}  pageOnlyProps  View metadata that will be passed only to the edge view
      * @return     {RouteContract}
      */
-    inertia: (pattern: string, component: string, pageOnlyProps: ResponseProps) => RouterContract;
+    inertia: (pattern: string, component: string, pageOnlyProps?: ResponseProps) => RouterContract;
   }
 }
