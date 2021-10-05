@@ -67,7 +67,7 @@ export class Inertia implements InertiaContract {
     const queryParams = request.all();
     let url = request.url();
 
-    if (isGet && queryParams) {
+    if (isGet && Object.keys(queryParams).length) {
       // Keep original request query params
       url += `?${encode(queryParams)}`;
     }
