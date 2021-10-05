@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { encode } from 'querystring';
 import md5 from 'md5';
 import {
   ResponseProps,
@@ -62,12 +63,13 @@ export class Inertia implements InertiaContract {
     const version = await this.resolveVersion();
 
     const isGet = request.method() === 'GET';
-    const queryParams = new URLSearchParams(request.all()).toString();
+
+    const queryParams = request.all();
     let url = request.url();
 
     if (isGet && queryParams) {
       // Keep original request query params
-      url += `?${queryParams}`;
+      url += `?${encode(queryParams)}`;
     }
 
     const page = {
