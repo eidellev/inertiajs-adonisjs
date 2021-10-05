@@ -160,7 +160,11 @@ export class Inertia implements InertiaContract {
     // Marshall back into an object
     return Object.fromEntries(result);
   }
-
+  /**
+   * @deprecated WARNING: This will be removed in a future release
+   *
+   * Simply replace with Adonis' `response.redirect().back()`
+   */
   public redirectBack() {
     const { response } = this.ctx;
 
