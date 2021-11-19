@@ -12,6 +12,7 @@ import { encode } from 'html-entities';
 import { Inertia } from '../../src/Inertia';
 import { inertiaHelper } from '../../src/inertiaHelper';
 import { HEADERS } from '../../src/utils';
+import InertiaMiddleware from '../../middleware/Inertia';
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,8 @@ export default class InertiaProvider {
    * Registers inertia binding
    */
   public registerBinding() {
+    this.app.container.bind('EidelLev/Inertia/Middleware', () => InertiaMiddleware);
+
     this.app.container.singleton('EidelLev/Inertia', () => ({
       share: Inertia.share,
       version: Inertia.version,

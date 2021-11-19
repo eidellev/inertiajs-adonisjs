@@ -10,6 +10,7 @@
   "files": [
     "build/adonis-typings",
     "build/providers",
+    "build/middleware",
     "build/src",
     "build/instructions.js",
     "build/templates"
