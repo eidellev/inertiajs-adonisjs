@@ -61,9 +61,7 @@ export class Inertia implements InertiaContract {
 
     // Get asset version
     const version = await this.resolveVersion();
-
     const isGet = request.method() === 'GET';
-
     const queryParams = request.all();
     let url = request.url();
 
@@ -88,11 +86,8 @@ export class Inertia implements InertiaContract {
       return response.status(409).header(HEADERS.INERTIA_LOCATION, url);
     }
 
-    response.header(HEADERS.INERTIA_HEADER, 'true');
-
     // JSON response
     if (isInertia) {
-      response.header(HEADERS.VARY, 'Accept');
       return page;
     }
 
