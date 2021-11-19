@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@adonisjs/config": "^3.0.5",
-    "@adonisjs/core": "^5.3.4",
+    "@adonisjs/core": "^5.4.0",
     "@adonisjs/mrm-preset": "^3.1.0",
     "@adonisjs/require-ts": "^2.0.8",
     "@adonisjs/session": "^4.0.6",
@@ -64,7 +64,7 @@
     "@types/common-tags": "^1.8.1",
     "@types/supertest": "^2.0.11",
     "adonis-preset-ts": "^2.1.0",
-    "common-tags": "^1.8.0",
+    "common-tags": "^1.8.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
@@ -79,6 +79,6 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.4.7",
     "supertest": "^6.1.6",
-    "typescript": "^4.4.3"
+    "typescript": "^4.5.2"
   }
 }
