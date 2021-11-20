@@ -34,6 +34,17 @@ You can register the package, generate additional files and install additional d
 node ace configure @eidellev/inertia-adonisjs
 ```
 
+### Register Inertia Middleware
+
+Add Inertia middleware to `start/kernel.ts`:
+
+```typescript
+Server.middleware.register([
+  () => import('@ioc:Adonis/Core/BodyParser'),
+  () => import('@ioc:EidelLev/Inertia/Middleware'),
+]);
+```
+
 ![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
 
 ## Making an Inertia Response
