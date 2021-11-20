@@ -7,5 +7,4 @@ coverage
 tmp
 .nyc_output
 yarn-error.log
-test/app/config/
-test/app/config/app.ts
+test/app
