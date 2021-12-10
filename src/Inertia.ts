@@ -156,14 +156,12 @@ export class Inertia implements InertiaContract {
     return Object.fromEntries(result);
   }
   /**
-   * @deprecated WARNING: This will be removed in a future release
-   *
-   * Simply replace with Adonis' `response.redirect().back()`
+   * Simply replace with Adonis' `response.redirect().withQs().back()`
    */
   public redirectBack() {
     const { response } = this.ctx;
 
-    response.status(303).redirect().back();
+    response.status(303).redirect().withQs().back();
   }
 
   /**
