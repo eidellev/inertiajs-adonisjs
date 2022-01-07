@@ -26,6 +26,23 @@ npm i @eidellev/inertia-adonisjs
 yarn add @eidellev/inertia-adonisjs
 ```
 
+Before continuing we need to make sure two additional dependencies exist in our project.
+
+`@adonisjs/view` and `@adonisjs/session`.
+
+```shell
+# NPM
+npm i @adonisjs/view 
+npm i @adonisjs/session
+
+# or Yarn
+yarn add @adonisjs/view
+yarn add @adonisjs/session
+
+# Additionally, we need to configure the packages.
+node ace configure @adonisjs/view
+node ace configure @adonisjs/session
+```
 ## Setup
 
 You can register the package, generate additional files and install additional depdencies by running:
