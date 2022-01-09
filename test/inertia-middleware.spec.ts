@@ -1,6 +1,6 @@
 import test from 'japa';
 import InertiaMiddleware from '../middleware/Inertia';
-import { setup, fs } from './utils';
+import { fs, setup } from './utils';
 
 test.group('Inertia middleware', (group) => {
   group.afterEach(async () => {

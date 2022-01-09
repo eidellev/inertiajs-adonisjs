@@ -2,9 +2,13 @@ import { createServer } from 'http';
 import test from 'japa';
 import supertest from 'supertest';
 import { HEADERS } from '../src/utils';
-import { setup } from './utils';
+import { setup, teardown } from './utils';
 
-test('Redirect', () => {
+test.group('Redirect', (group) => {
+  group.afterEach(async () => {
+    await teardown();
+  });
+
   test('Should set HTTP status code to 303 on PUT', async (assert) => {
     const app = await setup();
     const server = createServer(async (req, res) => {
