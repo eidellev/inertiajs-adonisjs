@@ -160,3 +160,53 @@ You can set up the inertia root div in your view using the @inertia tag:
   @inertia()
 </body>
 ```
+
+## Contributing
+
+This project happily accepts contributions.
+
+### Gettings Started
+
+After cloning the project run
+
+```shell
+npm ci
+npx husky install # This sets up the project's git hooks
+```
+
+### Before Making a Commit
+
+This project adheres to the [semantic versioning](https://semver.org/) convention, therefore all commits must be [conventional](https://github.com/conventional-changelog/commitlint).
+
+After staging your changes using `git add`, you can use the `commitlint CLI` to write your commit message:
+
+```
+npx commit
+```
+
+### Before Openning a Pull Request
+
+- Make sure you add tests that cover your changes
+- Make sure all tests pass:
+
+```shell
+npm test
+```
+
+- Make sure eslint passes:
+
+```shell
+npm run lint
+```
+
+- Make sure your commit message is valid:
+
+```shell
+npx commitlint --edit
+```
+
+**Thank you to all the people who already contributed to this project!**
+
+## Issues
+
+If you have a question or found a bug, feel free to [open an issue](https://github.com/eidellev/inertiajs-adonisjs/issues).
