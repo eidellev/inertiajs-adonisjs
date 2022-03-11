@@ -26,6 +26,25 @@ npm i @eidellev/inertia-adonisjs
 yarn add @eidellev/inertia-adonisjs
 ```
 
+## Required AdonisJS Libraries
+
+This library depends on two `AdonisJS` core libraries: `@adonisjs/view` and `@adonisjs/session`.
+If you started off with the `api` or `slim` project structure you will need to install these separately:
+
+```shell
+# NPM
+npm i @adonisjs/view
+npm i @adonisjs/session
+
+# or Yarn
+yarn add @adonisjs/view
+yarn add @adonisjs/session
+
+# Additionally, you will need to configure the packages:
+node ace configure @adonisjs/view
+node ace configure @adonisjs/session
+```
+
 ## Setup
 
 You can register the package, generate additional files and install additional depdencies by running:
