@@ -118,6 +118,74 @@ Route.get('redirect', async ({ inertia }) => {
 
 ## Advanced
 
+### Authentication
+
+AdonisJS provides us with powerful authentication and authorization APIs through `@adonisjs/auth`. After installing and setting up `@adonisjs/auth` you will need to set up exception handling to make it work with Inertia.
+
+First, let's use `@adonisjs/auth` in our controller to authenticate the user:
+
+```typescript
+// app/Controllers/Http/AuthController.ts
+public async login({ auth, request, response }: HttpContextContract) {
+  const loginSchema = schema.create({
+    email: schema.string({ trim: true }, [rules.email()]),
+    password: schema.string(),
+  });
+
+  const { email, password } = await request.validate({
+    schema: loginSchema,
+    messages: {
+      required: 'This field is required',
+      email: 'Please enter a valid email',
+    },
+  });
+
+  await auth.use('web').attempt(email, password);
+
+  response.redirect('/');
+}
+
+```
+
+By default, AdonisJS will send an HTTP 400 response, which inertia does not know how to handle. Therefore, we will intercept this exception and redirect back to our login page (we can also optionally preserve the error message with flash messages).
+
+```typescript
+// app/Exceptions/Handler.ts
+
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler';
+import Logger from '@ioc:Adonis/Core/Logger';
+
+export default class ExceptionHandler extends HttpExceptionHandler {
+  protected statusPages = {
+    '403': 'errors/unauthorized',
+    '404': 'errors/not-found',
+    '500..599': 'errors/server-error',
+  };
+
+  constructor() {
+    super(Logger);
+  }
+
+  public async handle(error: any, ctx: HttpContextContract) {
+    const { session, response } = ctx;
+
+    /**
+     * Handle failed authentication attempt
+     */
+    if (['E_INVALID_AUTH_PASSWORD', 'E_INVALID_AUTH_UID'].includes(error.code)) {
+      session.flash('errors', { login: error.message });
+      return response.redirect('/login');
+    }
+
+    /**
+     * Forward rest of the exceptions to the parent class
+     */
+    return super.handle(error, ctx);
+  }
+}
+```
+
 ### Asset Versioning
 
 To enable automatic asset refreshing, you simply need to tell Inertia what the current version of your assets is. This can be any string (letters, numbers, or a file hash), as long as it changes when your assets have been updated.
