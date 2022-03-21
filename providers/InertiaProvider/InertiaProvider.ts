@@ -26,9 +26,24 @@ export default class InertiaProvider {
   /**
    * Register the `inertia` view global
    */
-  private registerViewGlobal(View: ViewContract) {
+  private registerInertiaViewGlobal(View: ViewContract) {
     View.global('inertia', (page: Record<string, unknown>) => {
+      if (page.ssrBody) {
+        return page.ssrBody;
+      }
+
       return `<div id="app" data-page="${encode(JSON.stringify(page))}"></div>`;
+    });
+  }
+
+  /**
+   * Register the `inertia` view global
+   */
+  private registerInertiaHeadViewGlobal(View: ViewContract) {
+    View.global('inertiaHead', (page: Record<string, unknown>) => {
+      const { ssrHead = [] }: { ssrHead?: string[] } = page;
+
+      return ssrHead.join();
     });
   }
 
@@ -49,16 +64,37 @@ export default class InertiaProvider {
     });
   }
 
+  private registerInertiaHeadTag(View: ViewContract) {
+    View.registerTag({
+      block: false,
+      tagName: 'inertiaHead',
+      seekable: false,
+      compile(_, buffer, token) {
+        buffer.writeExpression(
+          `\n
+          out += template.sharedState.inertiaHead(state.page)
+          `,
+          token.filename,
+          token.loc.start.line,
+        );
+      },
+    });
+  }
+
   /*
    * Hook inertia into ctx during request cycle
    */
-  private registerInertia(HttpContext: HttpContextConstructorContract, Config: ConfigContract) {
+  private registerInertia(
+    Application: ApplicationContract,
+    HttpContext: HttpContextConstructorContract,
+    Config: ConfigContract,
+  ) {
     const config = Config.get('inertia.inertia', { view: 'app' });
 
     HttpContext.getter(
       'inertia',
       function inertia() {
-        return new Inertia(this, config);
+        return new Inertia(Application, this, config);
       },
       false,
     );
@@ -177,11 +213,14 @@ export default class InertiaProvider {
         'Adonis/Core/Response',
         'Adonis/Core/Validator',
         'Adonis/Core/Route',
+        'Adonis/Core/Application',
       ],
-      (HttpContext, View, Config, Request, Response, Validator, Route) => {
-        this.registerInertia(HttpContext, Config);
-        this.registerViewGlobal(View);
+      (HttpContext, View, Config, Request, Response, Validator, Route, Application) => {
+        this.registerInertia(Application, HttpContext, Config);
+        this.registerInertiaViewGlobal(View);
+        this.registerInertiaHeadViewGlobal(View);
         this.registerInertiaTag(View);
+        this.registerInertiaHeadTag(View);
         this.registerInertiaHelper(Request);
         this.registerRedirect(Response);
         this.registerNegotiator(Validator);
