@@ -50,6 +50,11 @@ declare module '@ioc:EidelLev/Inertia' {
        * NOTE: only `react` is currently supported
        */
       mode: 'react' | 'vue2' | 'vue3' | 'svelte';
+      /**
+       * Where should inertia look for page components relative to the `resources` directory
+       * @default js/Pages
+       */
+      pageRootDir: string;
     };
   }
 

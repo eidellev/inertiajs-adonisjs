@@ -1,23 +1,26 @@
-import { readFile } from 'fs/promises';
-import { encode } from 'querystring';
-import md5 from 'md5';
+import { ApplicationContract } from '@ioc:Adonis/Core/Application';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import {
-  ResponseProps,
   InertiaConfig,
   InertiaContract,
+  RenderResponse,
+  ResponseProps,
   SharedData,
   Version,
   VersionValue,
-  RenderResponse,
 } from '@ioc:EidelLev/Inertia';
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import { readFile } from 'fs/promises';
+import md5 from 'md5';
+import { encode } from 'querystring';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { HEADERS } from './utils';
 
 export class Inertia implements InertiaContract {
   private static sharedData: SharedData = {};
   private static currentVersion: Version;
 
-  constructor(private ctx: HttpContextContract, private config: InertiaConfig) {}
+  constructor(private app: ApplicationContract, private ctx: HttpContextContract, private config: InertiaConfig) {}
 
   public static share(data: SharedData) {
     Inertia.sharedData = data;
@@ -46,7 +49,7 @@ export class Inertia implements InertiaContract {
     responseProps: ResponseProps = {},
     pageOnlyProps: ResponseProps = {},
   ): RenderResponse {
-    const { view: inertiaView } = this.config;
+    const { view: inertiaView, ssr = { enabled: false } } = this.config;
     const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
     const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA));
@@ -91,8 +94,42 @@ export class Inertia implements InertiaContract {
       return page;
     }
 
-    // Initial page render
+    // Initial page render in SSR mode
+    if (ssr.enabled) {
+      const { head, body } = await this.renderSsrPage(page);
+      return view.render(inertiaView, {
+        page: {
+          ssrHead: head,
+          ssrBody: body,
+        },
+        ...pageOnlyProps,
+      });
+    }
+
+    // Initial page render in CSR mode
     return view.render(inertiaView, { page, ...pageOnlyProps });
+  }
+
+  private async renderSsrPage(page: any) {
+    const { ssr } = this.config;
+    const { mode, pageRootDir = 'js/Pages' } = ssr || {};
+
+    if (!mode) {
+      throw new Error('No SSR mode was selected');
+    }
+
+    if (mode === 'react') {
+      const { createInertiaApp } = await import('@inertiajs/inertia-react');
+
+      return createInertiaApp<ResponseProps>({
+        resolve: (name: string) => require(this.app.resourcesPath(pageRootDir, name)).default,
+        render: ReactDOMServer.renderToString,
+        page,
+        setup: ({ App, props }) => React.createElement(App, props),
+      });
+    }
+
+    throw new Error(`SSR mode for '${mode}' is currently not supported`);
   }
 
   /**
