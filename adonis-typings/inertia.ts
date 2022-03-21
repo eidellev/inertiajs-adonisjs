@@ -36,7 +36,21 @@ declare module '@ioc:EidelLev/Inertia' {
   }
 
   export interface InertiaConfig {
+    /**
+     * Which view template to render
+     */
     view: string;
+    /**
+     * SSR config
+     */
+    ssr?: {
+      enabled: boolean;
+      /**
+       * Which framework should we use to pre-render our response
+       * NOTE: only `react` is currently supported
+       */
+      mode: 'react' | 'vue2' | 'vue3' | 'svelte';
+    };
   }
 
   interface InertiaGlobal {
