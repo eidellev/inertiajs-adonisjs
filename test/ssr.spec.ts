@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import { codeBlock } from 'common-tags';
 import { createServer } from 'http';
 import { Inertia } from '../src/Inertia';
-import { HEADERS } from '../src/utils';
 import { setupSSR, teardown } from './utils';
 
 test.group('SSR', (group) => {
