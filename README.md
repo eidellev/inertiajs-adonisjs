@@ -137,9 +137,67 @@ Route.get('redirect', async ({ inertia }) => {
 
 ## Advanced
 
+### Server-side rendering
+
+When Inertia detects that it's running in a Node.js environment,
+it will automatically render the provided page object to HTML and return it.
+
+#### Setting up server side rendering
+
+> 👷 Currently SSR is supported only for react
+
+Edit the Inertia config file and add the following:
+
+```typescript
+// config/inertia.ts
+
+import { InertiaConfig } from '@ioc:EidelLev/Inertia';
+
+/*
+|--------------------------------------------------------------------------
+| Inertia-AdonisJS config
+|--------------------------------------------------------------------------
+|
+*/
+
+export const inertia: InertiaConfig = {
+  view: 'app',
+  ssr: {
+    enabled: true,
+    mode: 'react', // can also be 'vue2', 'vue3', 'svelte'
+    pageRootDir: 'js/Pages', // Where inertia should look for page components
+  },
+};
+```
+
+Edit the inertia view file and add the `inertiaHead` tag to the `head`
+section of the page
+
+```blade
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.ico">
+
+  @entryPointStyles('app')
+  @entryPointScripts('app')
+
+  @inertiaHead()
+  <title>Inertia App</title>
+</head>
+<body>
+  @inertia()
+</body>
+</html>
+```
+
 ### Authentication
 
-AdonisJS provides us with powerful authentication and authorization APIs through `@adonisjs/auth`. After installing and setting up `@adonisjs/auth` you will need to set up exception handling to make it work with Inertia.
+AdonisJS provides us with powerful authentication and authorization APIs through
+`@adonisjs/auth`. After installing and setting up `@adonisjs/auth` you will need
+to set up exception handling to make it work with Inertia.
 
 First, let's use `@adonisjs/auth` in our controller to authenticate the user:
 
@@ -220,7 +278,9 @@ Inertia.version('v1');
 Inertia.version(() => 'v2');
 ```
 
-If you are using Adonis's built-in assets manager [webpack encore](https://docs.adonisjs.com/guides/assets-manager) you can also pass the path to the manifest file to Inertia and the current version will be set automatically:
+If you are using Adonis's built-in assets manager [webpack encore](https://docs.adonisjs.com/guides/assets-manager)
+you can also pass the path to the manifest file to Inertia and the current
+version will be set automatically:
 
 ```typescript
 Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
@@ -228,7 +288,7 @@ Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
 
 ### Configuration
 
-The configuration for `inertia-adonisjs` is set in `/config/app.ts`:
+The configuration for `inertia-adonisjs` is set in `/config/inertia.ts`:
 
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
@@ -252,7 +312,7 @@ You can set up the inertia root div in your view using the @inertia tag:
 
 This project happily accepts contributions.
 
-### Gettings Started
+### Getting Started
 
 After cloning the project run
 
@@ -263,15 +323,17 @@ npx husky install # This sets up the project's git hooks
 
 ### Before Making a Commit
 
-This project adheres to the [semantic versioning](https://semver.org/) convention, therefore all commits must be [conventional](https://github.com/conventional-changelog/commitlint).
+This project adheres to the [semantic versioning](https://semver.org/) convention,
+therefore all commits must be [conventional](https://github.com/conventional-changelog/commitlint).
 
-After staging your changes using `git add`, you can use the `commitlint CLI` to write your commit message:
+After staging your changes using `git add`, you can use the `commitlint CLI`
+to write your commit message:
 
-```
+```shell
 npx commit
 ```
 
-### Before Openning a Pull Request
+### Before Opening a Pull Request
 
 - Make sure you add tests that cover your changes
 - Make sure all tests pass:
