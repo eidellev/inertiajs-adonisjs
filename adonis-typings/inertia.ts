@@ -54,7 +54,7 @@ declare module '@ioc:EidelLev/Inertia' {
        * Where should inertia look for page components relative to the `resources` directory
        * @default js/Pages
        */
-      pageRootDir: string;
+      pageRootDir?: string;
     };
   }
 
