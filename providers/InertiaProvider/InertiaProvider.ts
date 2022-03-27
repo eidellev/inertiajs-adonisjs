@@ -27,7 +27,7 @@ export default class InertiaProvider {
    * Register the `inertia` view global
    */
   private registerInertiaViewGlobal(View: ViewContract) {
-    View.global('inertia', (page: Record<string, unknown>) => {
+    View.global('inertia', (page: Record<string, unknown> = {}) => {
       if (page.ssrBody) {
         return page.ssrBody;
       }
@@ -41,7 +41,7 @@ export default class InertiaProvider {
    */
   private registerInertiaHeadViewGlobal(View: ViewContract) {
     View.global('inertiaHead', (page: Record<string, unknown>) => {
-      const { ssrHead = [] }: { ssrHead?: string[] } = page;
+      const { ssrHead = [] }: { ssrHead?: string[] } = page || {};
 
       return ssrHead.join();
     });

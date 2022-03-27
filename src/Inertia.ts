@@ -12,8 +12,6 @@ import {
 import { readFile } from 'fs/promises';
 import md5 from 'md5';
 import { encode } from 'querystring';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
 import { HEADERS } from './utils';
 
 export class Inertia implements InertiaContract {
@@ -110,7 +108,7 @@ export class Inertia implements InertiaContract {
     return view.render(inertiaView, { page, ...pageOnlyProps });
   }
 
-  private async renderSsrPage(page: any) {
+  private async renderSsrPage(page: any): Promise<{ head: string[]; body: string }> {
     const { ssr } = this.config;
     const { mode, pageRootDir = 'js/Pages' } = ssr || {};
 
@@ -119,6 +117,8 @@ export class Inertia implements InertiaContract {
     }
 
     if (mode === 'react') {
+      const React = await import('react');
+      const ReactDOMServer = await import('react-dom/server');
       const { createInertiaApp } = await import('@inertiajs/inertia-react');
 
       return createInertiaApp<ResponseProps>({
