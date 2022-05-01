@@ -21,7 +21,7 @@ export class Inertia implements InertiaContract {
   constructor(private app: ApplicationContract, private ctx: HttpContextContract, private config: InertiaConfig) {}
 
   public static share(data: SharedData) {
-    Inertia.sharedData = data;
+    Inertia.sharedData = {...Inertia.sharedData, ...data};
     return Inertia;
   }
 
