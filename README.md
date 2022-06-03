@@ -170,6 +170,8 @@ export const inertia: InertiaConfig = {
 };
 ```
 
+**NOTE**: This will only work if you add `"jsx": "react"` in adonis' tsconfig inside `compilerOptions`
+
 Edit the inertia view file and add the `inertiaHead` tag to the `head`
 section of the page
 
