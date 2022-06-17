@@ -36,6 +36,7 @@ declare module '@ioc:EidelLev/Inertia' {
 
     /**
      * Initiate a server-side redirect to an external resource
+     *
      * See https://inertiajs.com/redirects
      */
     location(url: string): void;

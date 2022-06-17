@@ -209,6 +209,6 @@ export class Inertia implements InertiaContract {
   public location(url: string) {
     const { response } = this.ctx;
 
-    response.header(HEADERS.INERTIA_LOCATION, url).conflict();
+    response.removeHeader(HEADERS.INERTIA_HEADER).header(HEADERS.INERTIA_LOCATION, url).conflict();
   }
 }
