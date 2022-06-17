@@ -39,7 +39,7 @@ test.group('SSR', (group) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Journeyman</title>
     </head>
-    <body><div id="app" data-page="{&quot;component&quot;:&quot;SomePage&quot;,&quot;props&quot;:{&quot;some&quot;:{&quot;props&quot;:{&quot;for&quot;:[&quot;your&quot;,&quot;page&quot;]}}},&quot;url&quot;:&quot;/&quot;}"><h1>Hello react!</h1></div>
+    <body><div id="app" data-page="{&quot;component&quot;:&quot;SomePage&quot;,&quot;props&quot;:{&quot;some&quot;:{&quot;props&quot;:{&quot;for&quot;:[&quot;your&quot;,&quot;page&quot;]}}},&quot;url&quot;:&quot;/&quot;}" data-reactroot=""><h1>Hello react!</h1></div>
     </body>
     </html>`,
     );
