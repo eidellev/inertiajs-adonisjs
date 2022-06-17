@@ -9,7 +9,7 @@ test.group('Location', (group) => {
     await teardown();
   });
 
-  test('Should set HTTP status code to 409 external redirect', async (assert) => {
+  test('Should set HTTP status code to 409 external redirect', async () => {
     const app = await setup();
     const server = createServer(async (req, res) => {
       const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
