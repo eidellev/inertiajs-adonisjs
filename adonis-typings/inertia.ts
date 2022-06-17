@@ -33,6 +33,12 @@ declare module '@ioc:EidelLev/Inertia' {
      * Redirect back with the correct HTTP status code
      */
     redirectBack(): void;
+
+    /**
+     * Initiate a server-side redirect to an external resource
+     * See https://inertiajs.com/redirects
+     */
+    location(url: string): void;
   }
 
   export interface InertiaConfig {
