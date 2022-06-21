@@ -8,7 +8,8 @@ import { setup, teardown } from './utils';
 test.group('Data', (group) => {
   group.afterEach(async () => {
     await teardown();
-    Inertia.share({});
+    // @ts-ignore
+    Inertia.sharedData = {};
   });
 
   test('Should return shared data', async (assert) => {
@@ -36,6 +37,35 @@ test.group('Data', (group) => {
     assert.deepEqual(response.body, {
       component: 'Some/Page',
       props: { ...props, shared: 'data' },
+      url: '/',
+    });
+  });
+
+  test('Should combine shared data(multiple calls)', async (assert) => {
+    const props = {
+      some: {
+        props: {
+          for: ['your', 'page'],
+        },
+      },
+    };
+    const app = await setup();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      Inertia.share({
+        shared: 'data',
+      }).share({ additional: 'shared data' });
+      const response = await ctx.inertia.render('Some/Page', props);
+
+      res.setHeader('Content-Type', 'application/json');
+      res.write(JSON.stringify(response));
+      res.end();
+    });
+
+    const response = await supertest(server).get('/').set(HEADERS.INERTIA_HEADER, 'true').expect(200);
+    assert.deepEqual(response.body, {
+      component: 'Some/Page',
+      props: { ...props, shared: 'data', additional: 'shared data' },
       url: '/',
     });
   });
