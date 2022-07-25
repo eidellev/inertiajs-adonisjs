@@ -51,6 +51,15 @@ function getInstallInertiaUserPref(sink: typeof sinkStatic) {
 }
 
 /**
+ * Asks user if they wish to enable SSR
+ */
+function getSsrUserPref(sink: typeof sinkStatic) {
+  return sink.getPrompt().confirm('Would you like to use SSR?', {
+    default: false,
+  });
+}
+
+/**
  * Prompts user for their preferred inertia client-side adapter
  */
 function getInertiaAdapterPref(sink: typeof sinkStatic) {
@@ -70,6 +79,9 @@ export default async function instructions(projectRoot: string, app: Application
   const view = await getView(sink);
 
   const shouldInstallInertia = await getInstallInertiaUserPref(sink);
+  const shouldEnableSsr = await getSsrUserPref(sink);
+
+  const pkg = new sink.files.PackageJsonFile(projectRoot);
 
   if (shouldInstallInertia) {
     const adapter = await getInertiaAdapterPref(sink);
@@ -77,7 +89,7 @@ export default async function instructions(projectRoot: string, app: Application
     /**
      * Install required dependencies
      */
-    const pkg = new sink.files.PackageJsonFile(projectRoot);
+
     pkg.install('@inertiajs/inertia', undefined, false);
     pkg.install(adapter, undefined, false);
 
@@ -99,6 +111,19 @@ export default async function instructions(projectRoot: string, app: Application
     spinner.stop();
   }
 
+  if (shouldEnableSsr) {
+    const spinner = sink.logger.await(`Installing SSR dependencies`);
+    try {
+      pkg.install('webpack-node-externals');
+      await pkg.commitAsync();
+      spinner.update('Packages installed');
+      sink.logger.success('All done!');
+    } catch (error) {
+      spinner.update('Unable to install packages');
+      sink.logger.fatal(error);
+    }
+  }
+
   /**
    * Generate inertia config
    */
@@ -115,7 +140,7 @@ export default async function instructions(projectRoot: string, app: Application
   const inertiaView = new sink.files.MustacheFile(projectRoot, viewPath, getStub('view.txt'));
 
   inertiaView.overwrite = true;
-  inertiaView.apply({ name: app.appName }).commit();
+  inertiaView.apply({ name: app.appName, inertiaHead: shouldEnableSsr ? '@inertiaHead' : undefined }).commit();
   const viewsDir = app.directoriesMap.get('views');
   sink.logger.action('create').succeeded(`${viewsDir}/${view}.edge`);
 

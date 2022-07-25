@@ -9,8 +9,9 @@
   @entryPointScripts('app')
 
   <title>{{name}}</title>
+  {{inertiaHead}}
 </head>
 <body>
-  @inertia()
+  @inertia
 </body>
 </html>
