@@ -1,6 +1,6 @@
 # Inertia.js AdonisJS Provider
 
-![](https://img.shields.io/npm/types/typescript?style=for-the-badge)
+![Typescript](https://img.shields.io/npm/types/typescript?style=for-the-badge)
 <a href="https://adonisjs.com/">
 <img src="https://img.shields.io/badge/%E2%96%B2%20adonis-v5-5a45ff?style=for-the-badge">
 </a>
@@ -12,9 +12,11 @@
 <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=for-the-badge"/>
 </a>
 
-[Inertia.js](https://inertiajs.com/) lets you quickly build modern single-page React, Vue and Svelte apps using classic server-side routing and controllers.
+[Inertia.js](https://inertiajs.com/) lets you quickly build modern single-page
+React, Vue and Svelte apps using classic server-side routing and controllers.
 
-[AdonisJS](https://adonisjs.com/) is a fully featured web framework focused on productivity and developer ergonomics.
+[AdonisJS](https://adonisjs.com/) is a fully featured web framework focused on
+productivity and developer ergonomics.
 
 ## Installation
 
@@ -29,7 +31,8 @@ yarn add @eidellev/inertia-adonisjs
 ## Required AdonisJS Libraries
 
 This library depends on two `AdonisJS` core libraries: `@adonisjs/view` and `@adonisjs/session`.
-If you started off with the `api` or `slim` project structure you will need to install these separately:
+If you started off with the `api` or `slim` project structure you will need to
+install these separately:
 
 ```shell
 # NPM
@@ -47,7 +50,8 @@ node ace configure @adonisjs/session
 
 ## Setup
 
-You can register the package, generate additional files and install additional depdencies by running:
+You can register the package, generate additional files and install additional
+dependencies by running:
 
 ```shell
 node ace configure @eidellev/inertia-adonisjs
@@ -80,13 +84,16 @@ export default class UsersController {
 
 ## Root template data
 
-There are situations where you may want to access your prop data in your root Edge template. For example, you may want to add a meta description tag, Twitter card meta tags, or Facebook Open Graph meta tags.
+There are situations where you may want to access your prop data in your root
+Edge template. For example, you may want to add a meta description tag,
+Twitter card meta tags, or Facebook Open Graph meta tags.
 
 ```blade
 <meta name="twitter:title" content="{{ page.title }}">
 ```
 
-Sometimes you may even want to provide data that will not be sent to your JavaScript component.
+Sometimes you may even want to provide data that will not be sent to your
+JavaScript component.
 
 ```typescript
 return inertia.render('Users/IndexPage', { users }, {  metadata: '...' : '...' });
@@ -94,7 +101,10 @@ return inertia.render('Users/IndexPage', { users }, {  metadata: '...' : '...' }
 
 ## Shared Data
 
-Sometimes you need to access certain data on numerous pages within your application. For example, a common use-case for this is showing the current user in the site header. Passing this data manually in each response isn't practical. In these situations shared data can be useful.
+Sometimes you need to access certain data on numerous pages within your
+application. For example, a common use-case for this is showing the current user
+in the site header. Passing this data manually in each response isn't practical.
+In these situations shared data can be useful.
 
 In order to add shared props, edit `start/inertia.ts`:
 
@@ -111,7 +121,8 @@ Inertia.share({
 
 ## Route Helper
 
-If you have a page that doesn't need a corresponding controller method, like an FAQ or about page, you can route directly to a component.
+If you have a page that doesn't need a corresponding controller method, like an
+FAQ or about page, you can route directly to a component.
 
 ```typescript
 // /start/routes.ts
@@ -127,7 +138,9 @@ Route.inertia('about', 'About', { metadata: '...' });
 
 ### External redirects
 
-Sometimes it's necessary to redirect to an external website, or even another non-Inertia endpoint in your app, within an Inertia request. This is possible using a server-side initiated window.location visit.
+Sometimes it's necessary to redirect to an external website, or even another
+non-Inertia endpoint in your app, within an Inertia request.
+This is possible using a server-side initiated window.location visit.
 
 ```typescript
 Route.get('redirect', async ({ inertia }) => {
@@ -170,7 +183,8 @@ export const inertia: InertiaConfig = {
 };
 ```
 
-**NOTE**: This will only work if you add `"jsx": "react"` in adonis' tsconfig inside `compilerOptions`
+**NOTE**: This will only work if you add `"jsx": "react"` in adonis'
+tsconfig inside `compilerOptions`
 
 Edit the inertia view file and add the `inertiaHead` tag to the `head`
 section of the page
@@ -226,7 +240,9 @@ public async login({ auth, request, response }: HttpContextContract) {
 
 ```
 
-By default, AdonisJS will send an HTTP 400 response, which inertia does not know how to handle. Therefore, we will intercept this exception and redirect back to our login page (we can also optionally preserve the error message with flash messages).
+By default, AdonisJS will send an HTTP 400 response, which inertia does not know
+how to handle. Therefore, we will intercept this exception and redirect back to
+our login page (we can also optionally preserve the error message with flash messages).
 
 ```typescript
 // app/Exceptions/Handler.ts
@@ -267,7 +283,10 @@ export default class ExceptionHandler extends HttpExceptionHandler {
 
 ### Asset Versioning
 
-To enable automatic asset refreshing, you simply need to tell Inertia what the current version of your assets is. This can be any string (letters, numbers, or a file hash), as long as it changes when your assets have been updated.
+To enable automatic asset refreshing, you simply need to tell Inertia what the
+current version of your assets is. This can be any string
+(letters, numbers, or a file hash), as long as it changes
+when your assets have been updated.
 
 To configure the current asset version, edit `start/inertia.ts`:
 
