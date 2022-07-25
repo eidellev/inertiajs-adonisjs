@@ -139,16 +139,12 @@ export async function setupSSR() {
   );
 
   await fs.add(
-    'resources/js/Pages/SomePage.tsx',
+    'public/ssr/ssr.js',
     codeBlock`
-    import React from 'react';
-
-    function SomePage() {
-      return React.createElement('h1', {}, 'Hello react!');
+    module.exports.default = function render(page) {
+      return {body:'<h1>Mock SSR</h1>', head: ''};
     }
-
-    export default SomePage;
-    `,
+  `,
   );
 
   const app = new Application(fs.basePath, 'web', {
