@@ -14,4 +14,7 @@ import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 
 export const inertia: InertiaConfig = {
   view: '{{view}}',
+  ssr: {
+    enabled: {{shouldEnableSsr}},
+  },
 };
