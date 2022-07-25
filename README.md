@@ -200,11 +200,11 @@ section of the page
   @entryPointStyles('app')
   @entryPointScripts('app')
 
-  @inertiaHead()
+  @inertiaHead
   <title>Inertia App</title>
 </head>
 <body>
-  @inertia()
+  @inertia
 </body>
 </html>
 ```
@@ -325,7 +325,7 @@ You can set up the inertia root div in your view using the @inertia tag:
 
 ```blade
 <body>
-  @inertia()
+  @inertia
 </body>
 ```
 
