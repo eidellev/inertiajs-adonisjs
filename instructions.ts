@@ -114,7 +114,7 @@ export default async function instructions(projectRoot: string, app: Application
   if (shouldEnableSsr) {
     const spinner = sink.logger.await(`Installing SSR dependencies`);
     try {
-      pkg.install('webpack-node-externals');
+      pkg.install('webpack-node-externals', undefined, true);
       await pkg.commitAsync();
       spinner.update('Packages installed');
       sink.logger.success('All done!');
@@ -128,7 +128,7 @@ export default async function instructions(projectRoot: string, app: Application
    * Generate inertia config
    */
   inertiaConfig.overwrite = true;
-  inertiaConfig.apply({ view }).commit();
+  inertiaConfig.apply({ view, shouldEnableSsr }).commit();
 
   const configDir = app.directoriesMap.get('config') || 'config';
   sink.logger.action('create').succeeded(`${configDir}/inertia.ts`);
