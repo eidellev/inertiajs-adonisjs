@@ -8,6 +8,7 @@ import {
   SharedData,
   Version,
   VersionValue,
+  SsrRenderResult,
 } from '@ioc:EidelLev/Inertia';
 import { readFile } from 'fs/promises';
 import md5 from 'md5';
@@ -95,6 +96,7 @@ export class Inertia implements InertiaContract {
     // Initial page render in SSR mode
     if (ssr.enabled) {
       const { head, body } = await this.renderSsrPage(page);
+
       return view.render(inertiaView, {
         page: {
           ssrHead: head,
@@ -108,28 +110,10 @@ export class Inertia implements InertiaContract {
     return view.render(inertiaView, { page, ...pageOnlyProps });
   }
 
-  private async renderSsrPage(page: any): Promise<{ head: string[]; body: string }> {
-    const { ssr } = this.config;
-    const { mode, pageRootDir = 'js/Pages' } = ssr || {};
+  private renderSsrPage(page: any): Promise<SsrRenderResult> {
+    const render = require(this.app.publicPath('ssr', 'ssr.js')).default;
 
-    if (!mode) {
-      throw new Error('No SSR mode was selected');
-    }
-
-    if (mode === 'react') {
-      const React = await import('react');
-      const ReactDOMServer = await import('react-dom/server');
-      const { createInertiaApp } = await import('@inertiajs/inertia-react');
-
-      return createInertiaApp<ResponseProps>({
-        resolve: (name: string) => require(this.app.resourcesPath(pageRootDir, name)).default,
-        render: ReactDOMServer.renderToString,
-        page,
-        setup: ({ App, props }) => React.createElement(App, props),
-      });
-    }
-
-    throw new Error(`SSR mode for '${mode}' is currently not supported`);
+    return render(page);
   }
 
   /**
@@ -192,6 +176,7 @@ export class Inertia implements InertiaContract {
     // Marshall back into an object
     return Object.fromEntries(result);
   }
+
   /**
    * Simply replace with Adonis' `response.redirect().withQs().back()`
    */
