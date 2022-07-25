@@ -52,16 +52,6 @@ declare module '@ioc:EidelLev/Inertia' {
      */
     ssr?: {
       enabled: boolean;
-      /**
-       * Which framework should we use to pre-render our response
-       * NOTE: only `react` is currently supported
-       */
-      mode: 'react' | 'vue2' | 'vue3' | 'svelte';
-      /**
-       * Where should inertia look for page components relative to the `resources` directory
-       * @default js/Pages
-       */
-      pageRootDir?: string;
     };
   }
 
@@ -83,6 +73,12 @@ declare module '@ioc:EidelLev/Inertia' {
     manifestFile: (path: string) => string;
   }
 
+  export interface SsrRenderResult {
+    head: string[];
+    body: string;
+  }
+
   const Inertia: InertiaGlobal;
+
   export default Inertia;
 }

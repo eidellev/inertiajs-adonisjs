@@ -37,7 +37,7 @@ export default class InertiaProvider {
   }
 
   /**
-   * Register the `inertia` view global
+   * Register the `inertiaHead` view global
    */
   private registerInertiaHeadViewGlobal(View: ViewContract) {
     View.global('inertiaHead', (page: Record<string, unknown>) => {
