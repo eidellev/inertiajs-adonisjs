@@ -157,13 +157,12 @@ it will automatically render the provided page object to HTML and return it.
 
 #### Setting up server side rendering
 
-> 👷 Currently SSR is supported only for react
+When starting a new project with inertia and you can enable SSR while
+configuring the package.
 
-Edit the Inertia config file and add the following:
+Otherwise you can enable SSR by editing `config/inertia.ts`:
 
 ```typescript
-// config/inertia.ts
-
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 
 /*
@@ -176,9 +175,7 @@ import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 export const inertia: InertiaConfig = {
   view: 'app',
   ssr: {
-    enabled: true,
-    mode: 'react', // can also be 'vue2', 'vue3', 'svelte'
-    pageRootDir: 'js/Pages', // Where inertia should look for page components
+    enabled: true, // ⬅
   },
 };
 ```
