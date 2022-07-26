@@ -154,4 +154,18 @@ export default async function instructions(projectRoot: string, app: Application
   inertiaPreload.apply().commit();
   const preloadsDir = app.directoriesMap.get('start');
   sink.logger.action('create').succeeded(`${preloadsDir}/inertia.ts`);
+
+  /**
+   * Generate SSR webpack config
+   */
+  if (shouldEnableSsr) {
+    const webpackSsrConfig = new sink.files.MustacheFile(
+      projectRoot,
+      'webpack.ssr.config.js',
+      getStub('webpack.ssr.config.txt'),
+    );
+    webpackSsrConfig.overwrite = true;
+    webpackSsrConfig.apply().commit();
+    sink.logger.action('create').succeeded('webpack.ssr.config.js');
+  }
 }
