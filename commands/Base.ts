@@ -1,5 +1,4 @@
 import { BaseCommand } from '@adonisjs/ace';
-// import { flags } from '@adonisjs/core/build/standalone';
 import { spawn } from 'child_process';
 
 /**
