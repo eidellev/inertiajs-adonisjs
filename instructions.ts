@@ -33,7 +33,7 @@ function getStub(...relativePaths: string[]) {
  * Prompts user for view file they wish to use
  */
 function getView(sink: typeof sinkStatic) {
-  return sink.getPrompt().ask('Select the view you would like to use', {
+  return sink.getPrompt().ask('Enter the edge file you would like to use as your entrypoint', {
     default: 'app',
     validate(view) {
       return !!view.length || 'This cannot be left empty';
@@ -45,7 +45,7 @@ function getView(sink: typeof sinkStatic) {
  * Asks user of they would like to install the client-side inertia library
  */
 function getInstallInertiaUserPref(sink: typeof sinkStatic) {
-  return sink.getPrompt().confirm('Would you like to install Inertia.js?', {
+  return sink.getPrompt().confirm('Would you like to install the Inertia.js client-side adapter?', {
     default: true,
   });
 }
@@ -55,6 +55,7 @@ function getInstallInertiaUserPref(sink: typeof sinkStatic) {
  */
 function getSsrUserPref(sink: typeof sinkStatic) {
   return sink.getPrompt().confirm('Would you like to use SSR?', {
+    hint: 'Svelte is currently unsupported',
     default: false,
   });
 }
@@ -82,9 +83,10 @@ export default async function instructions(projectRoot: string, app: Application
   const shouldEnableSsr = await getSsrUserPref(sink);
 
   const pkg = new sink.files.PackageJsonFile(projectRoot);
+  let adapter;
 
   if (shouldInstallInertia) {
-    const adapter = await getInertiaAdapterPref(sink);
+    adapter = await getInertiaAdapterPref(sink);
 
     /**
      * Install required dependencies
@@ -102,7 +104,6 @@ export default async function instructions(projectRoot: string, app: Application
     try {
       await pkg.commitAsync();
       spinner.update('Packages installed');
-      sink.logger.success('All done!');
     } catch (error) {
       spinner.update('Unable to install packages');
       sink.logger.fatal(error);
@@ -112,12 +113,22 @@ export default async function instructions(projectRoot: string, app: Application
   }
 
   if (shouldEnableSsr) {
+    sink.logger.info('Adapter:', adapter);
     const spinner = sink.logger.await(`Installing SSR dependencies`);
+
     try {
       pkg.install('webpack-node-externals', undefined, true);
+
+      if (adapter === '@inertiajs/inertia-vue') {
+        pkg.install('vue-server-renderer', undefined, false);
+      } else if (adapter === '@inertiajs/inertia-vue3') {
+        pkg.install('@vue/server-renderer', undefined, false);
+      } else {
+        pkg.install('react-dom', undefined, false);
+      }
+
       await pkg.commitAsync();
-      spinner.update('Packages installed');
-      sink.logger.success('All done!');
+      spinner.update('SSR Packages installed');
     } catch (error) {
       spinner.update('Unable to install packages');
       sink.logger.fatal(error);
