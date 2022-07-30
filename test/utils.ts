@@ -139,7 +139,7 @@ export async function setupSSR() {
   );
 
   await fs.add(
-    'public/ssr/ssr.js',
+    'inertia/ssr/ssr.js',
     codeBlock`
     module.exports.default = function render(page) {
       return {body:'<h1>Mock SSR</h1>', head: ''};
