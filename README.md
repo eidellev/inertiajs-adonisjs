@@ -183,6 +183,7 @@ Yous entrypoint code will depend on your client-side framework of choice:
 ##### React
 
 ```jsx
+import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { createInertiaApp } from '@inertiajs/inertia-react';
 
