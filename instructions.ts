@@ -164,6 +164,7 @@ export default async function instructions(projectRoot: string, app: Application
       'webpack.ssr.config.js',
       getStub('webpack.ssr.config.txt'),
     );
+
     webpackSsrConfig.overwrite = true;
     webpackSsrConfig.apply().commit();
     sink.logger.action('create').succeeded('webpack.ssr.config.js');

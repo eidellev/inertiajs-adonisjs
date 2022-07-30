@@ -12,11 +12,20 @@
 <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=for-the-badge"/>
 </a>
 
+## What is this all about?
+
 [Inertia.js](https://inertiajs.com/) lets you quickly build modern single-page
 React, Vue and Svelte apps using classic server-side routing and controllers.
 
 [AdonisJS](https://adonisjs.com/) is a fully featured web framework focused on
 productivity and developer ergonomics.
+
+### Project goals
+
+- Feature parity with the official Inertia backend adapters
+- Full compatibility with all official client-side adapters
+- Easy setup
+- Quality documentation
 
 ## Installation
 
@@ -28,7 +37,7 @@ npm i @eidellev/inertia-adonisjs
 yarn add @eidellev/inertia-adonisjs
 ```
 
-## Required AdonisJS Libraries
+## Required AdonisJS libraries
 
 This library depends on two `AdonisJS` core libraries: `@adonisjs/view` and `@adonisjs/session`.
 If you started off with the `api` or `slim` project structure you will need to
@@ -57,7 +66,12 @@ dependencies by running:
 node ace configure @eidellev/inertia-adonisjs
 ```
 
-### Register Inertia Middleware
+Inertia will query you on your preferences (e.g. which front-end framework you
+prefer and if you want server side rendering) and generate additional files.
+
+![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
+
+### Register inertia middleware
 
 Add Inertia middleware to `start/kernel.ts`:
 
@@ -67,8 +81,6 @@ Server.middleware.register([
   () => import('@ioc:EidelLev/Inertia/Middleware'),
 ]);
 ```
-
-![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
 
 ## Making an Inertia Response
 
@@ -99,7 +111,7 @@ JavaScript component.
 return inertia.render('Users/IndexPage', { users }, {  metadata: '...' : '...' });
 ```
 
-## Shared Data
+## Shared data
 
 Sometimes you need to access certain data on numerous pages within your
 application. For example, a common use-case for this is showing the current user
@@ -157,54 +169,98 @@ it will automatically render the provided page object to HTML and return it.
 
 #### Setting up server side rendering
 
-When starting a new project with inertia and you can enable SSR while
-configuring the package.
+After configuring the the package using `ace configure` and enabling SSR,
+you will need to edit `webpack.ssr.config.js`.
+Set it up as you have your regular encore config to
+support your client-side framework of choice.
 
-Otherwise you can enable SSR by editing `config/inertia.ts`:
+#### Adding an additional endpoint
 
-```typescript
-import { InertiaConfig } from '@ioc:EidelLev/Inertia';
+Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts` if you prefer to use Typescript).
 
-/*
-|--------------------------------------------------------------------------
-| Inertia-AdonisJS config
-|--------------------------------------------------------------------------
-|
-*/
+Yous entrypoint code will depend on your client-side framework of choice:
 
-export const inertia: InertiaConfig = {
-  view: 'app',
-  ssr: {
-    enabled: true, // ⬅
-  },
-};
+##### React
+
+```jsx
+import ReactDOMServer from 'react-dom/server';
+import { createInertiaApp } from '@inertiajs/inertia-react';
+
+export default function render(page) {
+  createInertiaApp({
+    page,
+    render: ReactDOMServer.renderToString,
+    resolve: (name) => require(`./Pages/${name}`),
+    setup: ({ App, props }) => <App {...props} />,
+  });
+}
 ```
 
-**NOTE**: This will only work if you add `"jsx": "react"` in adonis'
-tsconfig inside `compilerOptions`
+##### Vue3
 
-Edit the inertia view file and add the `inertiaHead` tag to the `head`
-section of the page
+```javascript
+import { createSSRApp, h } from 'vue';
+import { renderToString } from '@vue/server-renderer';
+import { createInertiaApp } from '@inertiajs/inertia-vue3';
 
-```blade
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/favicon.ico">
-
-  @entryPointStyles('app')
-  @entryPointScripts('app')
-
-  @inertiaHead
-  <title>Inertia App</title>
-</head>
-<body>
-  @inertia
-</body>
-</html>
+export default function render(page) {
+  return createInertiaApp({
+    page,
+    render: renderToString,
+    resolve: (name) => require(`./Pages/${name}`),
+    setup({ app, props, plugin }) {
+      return createSSRApp({
+        render: () => h(app, props),
+      }).use(plugin);
+    },
+  });
+}
 ```
+
+##### Vue2
+
+```javascript
+import Vue from 'vue';
+import { createRenderer } from 'vue-server-renderer';
+import { createInertiaApp } from '@inertiajs/inertia-vue';
+
+export default function render(page) {
+  return createInertiaApp({
+    page,
+    render: createRenderer().renderToString,
+    resolve: (name) => require(`./Pages/${name}`),
+    setup({ app, props, plugin }) {
+      Vue.use(plugin);
+      return new Vue({
+        render: (h) => h(app, props),
+      });
+    },
+  });
+}
+```
+
+##### Svelte
+
+> 👷 SSR is not yet ready for the Svelte adapter,
+> but will added as soon as Inertia supports it.
+
+#### Starting the SSR dev server
+
+In a separate terminal run encore for SSR in watch mode:
+
+```shell
+node ace ssr:watch
+```
+
+#### Building SSR for production
+
+```shell
+node ace ssr:build
+```
+
+> ❗In most cases you do not want the compiled javascript for ssr committed
+> to source control.
+> To avoid it, please add the `inertia` directory to `.gitignore`.
 
 ### Authentication
 
