@@ -188,7 +188,7 @@ import ReactDOMServer from 'react-dom/server';
 import { createInertiaApp } from '@inertiajs/inertia-react';
 
 export default function render(page) {
-  createInertiaApp({
+  return createInertiaApp({
     page,
     render: ReactDOMServer.renderToString,
     resolve: (name) => require(`./Pages/${name}`),
