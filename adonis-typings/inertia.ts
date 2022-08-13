@@ -52,6 +52,11 @@ declare module '@ioc:EidelLev/Inertia' {
      */
     ssr?: {
       enabled: boolean;
+      /**
+       * SSR application entrypoint
+       * @default 'ssr.js'
+       */
+      entrypoint?: string;
     };
   }
 

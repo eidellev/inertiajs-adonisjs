@@ -169,7 +169,7 @@ it will automatically render the provided page object to HTML and return it.
 
 #### Setting up server side rendering
 
-After configuring the the package using `ace configure` and enabling SSR,
+After configuring the package using `ace configure` and enabling SSR,
 you will need to edit `webpack.ssr.config.js`.
 Set it up as you have your regular encore config to
 support your client-side framework of choice.
@@ -178,7 +178,7 @@ support your client-side framework of choice.
 
 Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts` if you prefer to use Typescript).
 
-Yous entrypoint code will depend on your client-side framework of choice:
+Your entrypoint code will depend on your client-side framework of choice:
 
 ##### React
 
@@ -368,8 +368,19 @@ The configuration for `inertia-adonisjs` is set in `/config/inertia.ts`:
 ```typescript
 import { InertiaConfig } from '@ioc:EidelLev/Inertia';
 
+/*
+|--------------------------------------------------------------------------
+| Inertia-AdonisJS config
+|--------------------------------------------------------------------------
+|
+*/
+
 export const inertia: InertiaConfig = {
   view: 'app',
+  ssr: {
+    enabled: true,
+    entrypoint: 'ssr.js', // `ssr.ts` or `ssr.tsx` depending on your requirements
+  },
 };
 ```
 
