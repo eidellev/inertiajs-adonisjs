@@ -43,7 +43,7 @@ export default class InertiaProvider {
     View.global('inertiaHead', (page: Record<string, unknown>) => {
       const { ssrHead = [] }: { ssrHead?: string[] } = page || {};
 
-      return ssrHead.join();
+      return ssrHead.join('\n');
     });
   }
 
