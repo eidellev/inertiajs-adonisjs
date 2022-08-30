@@ -52,6 +52,23 @@ declare module '@ioc:EidelLev/Inertia' {
      */
     ssr?: {
       enabled: boolean;
+      /**
+       * Programatically control which page components are rendered server-side<br/>
+       * All other components will only be rendered on the client<br/>
+       * This can be useful if you wish to avoid some of the complexities of building an isomorphic app<br/>
+       *
+       * @example
+       * ```typescript
+       * {
+       *    ssr: {
+       *        enabled:true,
+       *        allowList: ['HomePage', 'Login']
+       *    }
+       * }
+       * ```
+       *
+       */
+      allowList?: string[];
     };
   }
 
