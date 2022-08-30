@@ -174,9 +174,9 @@ you will need to edit `webpack.ssr.config.js`.
 Set it up as you have your regular encore config to
 support your client-side framework of choice.
 
-#### Adding an additional endpoint
+#### Adding an additional entrypoint
 
-Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts` if you prefer to use Typescript).
+Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts`/`ssr.tsx` if you prefer to use Typescript).
 
 Yous entrypoint code will depend on your client-side framework of choice:
 
@@ -262,6 +262,23 @@ node ace ssr:build
 > ❗In most cases you do not want the compiled javascript for ssr committed
 > to source control.
 > To avoid it, please add the `inertia` directory to `.gitignore`.
+
+#### Opting Out of SSR
+
+Building isomorphic apps often comes with additional complexity.
+In some cases you may prefer to render only certain public routes on the
+server while letting the rest be rendered on the client.
+Luckily you can easily opt out of SSR by configuring a list of components that
+will rendered on the server, excluding all other components.
+
+```typescript
+{
+  ssr: {
+    enabled:true,
+    allowList: ['HomePage', 'Login']
+  }
+}
+```
 
 ### Authentication
 
