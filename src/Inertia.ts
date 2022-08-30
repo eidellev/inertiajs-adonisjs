@@ -60,6 +60,7 @@ export class Inertia implements InertiaContract {
       component,
       partialDataComponentHeader,
     );
+    const disallowSsr = ssr?.allowList && !ssr.allowList.includes(component);
 
     // Get asset version
     const version = await this.resolveVersion();
@@ -94,7 +95,7 @@ export class Inertia implements InertiaContract {
     }
 
     // Initial page render in SSR mode
-    if (ssr.enabled) {
+    if (ssr.enabled && !disallowSsr) {
       const { head, body } = await this.renderSsrPage(page);
 
       return view.render(inertiaView, {

@@ -95,7 +95,7 @@ export async function setupSSR() {
       view: 'app',
       ssr: {
         enabled: true,
-        mode: 'react'
+        allowList: ['SomePage'],
       }
     };`,
   );
