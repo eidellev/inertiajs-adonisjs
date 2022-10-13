@@ -6,12 +6,13 @@
   <link rel="icon" type="image/png" href="/favicon.ico">
 
   @entryPointStyles('app')
-  @entryPointScripts('app')
 
   <title>{{name}}</title>
   {{inertiaHead}}
 </head>
 <body>
   @inertia
+  
+  @entryPointScripts('app')
 </body>
 </html>
