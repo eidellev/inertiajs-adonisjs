@@ -71,6 +71,18 @@ prefer and if you want server side rendering) and generate additional files.
 
 ![Invoke example](invoke.gif 'node ace invoke @eidellev/inertia-adonisjs')
 
+### Configuration
+
+The configuration for `inertia-adonisjs` is set in `/config/inertia.ts`:
+
+```typescript
+import { InertiaConfig } from '@ioc:EidelLev/Inertia';
+
+export const inertia: InertiaConfig = {
+  view: 'app',
+};
+```
+
 ### Register inertia middleware
 
 Add Inertia middleware to `start/kernel.ts`:
@@ -176,7 +188,8 @@ support your client-side framework of choice.
 
 #### Adding an additional entrypoint
 
-Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts`/`ssr.tsx` if you prefer to use Typescript).
+Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts`/`ssr.tsx`
+if you prefer to use Typescript).
 
 Yous entrypoint code will depend on your client-side framework of choice:
 
@@ -262,6 +275,25 @@ node ace ssr:build
 > ❗In most cases you do not want the compiled javascript for ssr committed
 > to source control.
 > To avoid it, please add the `inertia` directory to `.gitignore`.
+
+#### Customizing SSR output directory
+
+By default, SSR assets will be emitted to `inertia/ssr` directory. If you
+prefer to use a different directory, you can change it by setting the
+`buildDirectory` parameter:
+
+```typescript
+// /config/inertia.ts
+{
+  ssr: {
+    enabled:true,
+    buildDirectory: 'custom_path/ssr'
+  }
+}
+```
+
+**You will also need to configure your SSR webpack config to output files to
+the same path.**
 
 #### Opting Out of SSR
 
