@@ -112,7 +112,11 @@ export class Inertia implements InertiaContract {
   }
 
   private renderSsrPage(page: any): Promise<SsrRenderResult> {
-    const render = require(this.app.makePath('inertia', 'ssr', 'ssr.js')).default;
+    const { ssr = { buildDirectory: undefined } } = this.config;
+    const { buildDirectory } = ssr;
+    const path = buildDirectory || 'inertia/ssr';
+
+    const render = require(this.app.makePath(path, 'ssr.js')).default;
 
     return render(page);
   }
