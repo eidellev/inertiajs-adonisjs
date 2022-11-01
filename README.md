@@ -143,6 +143,33 @@ Inertia.share({
 });
 ```
 
+### Sharing route params
+
+Traditionally in Adonis, we have access to the context instance eg. params
+inside view (.edge) that we can use to help build our dynamic routes.
+But with inertia, we lose access to the context instance entirely.
+
+We can overcome this limitation by passing the context
+instance as a shared data prop:
+
+```typescript
+// start/inertia.ts
+import Inertia from '@ioc:EidelLev/Inertia';
+
+Inertia.share({
+  params: ({ params }) => params,
+});
+```
+
+Then we can access the params in our component like so:
+
+```typescript
+import { usePage } from '@inertiajs/inertia-react';
+
+const { params } = usePage().props;
+stardust.route('users.show', { id: params.id });
+```
+
 ## Route Helper
 
 If you have a page that doesn't need a corresponding controller method, like an
@@ -408,18 +435,6 @@ version will be set automatically:
 
 ```typescript
 Inertia.version(() => Inertia.manifestFile('public/assets/manifest.json'));
-```
-
-### Configuration
-
-The configuration for `inertia-adonisjs` is set in `/config/inertia.ts`:
-
-```typescript
-import { InertiaConfig } from '@ioc:EidelLev/Inertia';
-
-export const inertia: InertiaConfig = {
-  view: 'app',
-};
 ```
 
 ## Setting Up View
