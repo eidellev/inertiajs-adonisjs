@@ -53,7 +53,7 @@ declare module '@ioc:EidelLev/Inertia' {
     ssr?: {
       enabled: boolean;
       /**
-       * Programatically control which page components are rendered server-side<br/>
+       * Programaticaly control which page components are rendered server-side<br/>
        * All other components will only be rendered on the client<br/>
        * This can be useful if you wish to avoid some of the complexities of building an isomorphic app<br/>
        *
@@ -69,6 +69,13 @@ declare module '@ioc:EidelLev/Inertia' {
        *
        */
       allowList?: string[];
+      /**
+       * Controls SSR build output directory
+       *
+       * **If you change this you will also need to change the output directory in your webpack encore config!**
+       * @default './inertia/ssr'
+       */
+      buildDirectory?: string;
     };
   }
 
