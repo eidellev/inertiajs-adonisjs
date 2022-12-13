@@ -189,4 +189,87 @@ test.group('Data', (group) => {
       url: '/',
     });
   });
+
+  test('Should not return lazy response data', async (assert) => {
+    const props = {
+      some() {
+        return {
+          props: {
+            for: ['your', 'page'],
+          },
+        };
+      },
+      another: 'prop',
+      lazyProp: Inertia.lazy(() => { return { lazy: 'too lazy'}}),
+    };
+    const app = await setup();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      const response = await ctx.inertia.render('Some/Page', props);
+
+      res.setHeader('Content-Type', 'application/json');
+      res.write(JSON.stringify(response));
+      res.end();
+    });
+
+    const response = await supertest(server).get('/').set(HEADERS.INERTIA_HEADER, 'true').expect(200);
+
+    assert.deepEqual(response.body, {
+      component: 'Some/Page',
+      props: {
+        some: {
+          props: {
+            for: ['your', 'page'],
+          },
+        },
+        another: 'prop',
+      },
+      url: '/',
+    });
+  });
+
+  test('Should return lazy response data', async (assert) => {
+    const props = {
+      some() {
+        return {
+          props: {
+            for: ['your', 'page'],
+          },
+        };
+      },
+      another: 'prop',
+      lazyProp: Inertia.lazy(() => { return { lazy: 'too lazy'}}),
+      lazyAsyncProp: Inertia.lazy(() => new Promise((res) =>
+        res({
+          lazyAsync: 'too lazy to be async'
+        })
+      )),
+    };
+    const app = await setup();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      const response = await ctx.inertia.render('Some/Page', props);
+
+      res.setHeader('Content-Type', 'application/json');
+      res.write(JSON.stringify(response));
+      res.end();
+    });
+
+    const response = await supertest(server)
+      .get('/')
+      .set(HEADERS.INERTIA_HEADER, 'true')
+      .set(HEADERS.INERTIA_PARTIAL_DATA, 'another,lazyProp,lazyAsyncProp')
+      .set(HEADERS.INERTIA_PARTIAL_DATA_COMPONENT, 'Some/Page')
+      .expect(200);
+
+    assert.deepEqual(response.body, {
+      component: 'Some/Page',
+      props: {
+        another: 'prop',
+        lazyProp: { lazy: 'too lazy' },
+        lazyAsyncProp: { lazyAsync: 'too lazy to be async' }
+      },
+      url: '/',
+    });
+  });
 });
