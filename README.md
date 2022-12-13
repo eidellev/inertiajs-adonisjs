@@ -106,6 +106,31 @@ export default class UsersController {
 }
 ```
 
+## Making lazy Inertia Response
+
+Lazy responses are useful when you want to render a page without some data that should be loaded initially.
+
+```typescript
+import Inertia from '@ioc:EidelLev/Inertia';
+
+export default class UsersController {
+  public async index({ inertia, request }: HttpContextContract) {
+    const users = await User.all();
+
+    return inertia.render('Users/IndexPage', {
+      users,
+      lazyProp: Inertia.lazy(() => {
+        return { lazy: 'too lazy' };
+      })
+    });
+  }
+}
+```
+The data will be loaded on demand by the explicit Inertia visit with option
+```typescript
+{ only: ['lazyProp']}
+```
+
 ## Root template data
 
 There are situations where you may want to access your prop data in your root

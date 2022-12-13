@@ -20,6 +20,10 @@ declare module '@ioc:EidelLev/Inertia' {
   export type LazyVersion = () => VersionValue | Promise<VersionValue>;
   export type Version = VersionValue | LazyVersion | undefined;
 
+  export interface InertiaLazyProp {
+    lazyValue: ResponseProps | Promise<ResponseProps>;
+  }
+
   export interface InertiaContract {
     /**
      * Render inertia response
@@ -95,6 +99,11 @@ declare module '@ioc:EidelLev/Inertia' {
      * @param path manifest file path
      */
     manifestFile: (path: string) => string;
+
+    /**
+     * Lazy prop (not loaded until explicitly requested)
+     */
+    lazy(lazyPropCallback: () => ResponseProps | Promise<ResponseProps>): InertiaLazyProp;
   }
 
   export interface SsrRenderResult {

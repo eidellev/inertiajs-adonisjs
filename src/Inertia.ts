@@ -9,11 +9,13 @@ import {
   Version,
   VersionValue,
   SsrRenderResult,
+  InertiaLazyProp,
 } from '@ioc:EidelLev/Inertia';
 import { readFile } from 'fs/promises';
 import md5 from 'md5';
 import { encode } from 'querystring';
 import { HEADERS } from './utils';
+import LazyProp from './LazyProp';
 
 export class Inertia implements InertiaContract {
   private static sharedData: SharedData = {};
@@ -41,6 +43,10 @@ export class Inertia implements InertiaContract {
   public static version(version: Version) {
     Inertia.currentVersion = version;
     return Inertia;
+  }
+
+  public static lazy(callback: () => ResponseProps | Promise<ResponseProps>): InertiaLazyProp {
+    return new LazyProp(callback);
   }
 
   public async render(
@@ -161,11 +167,20 @@ export class Inertia implements InertiaContract {
       });
 
       props = Object.fromEntries(filteredProps);
+    } else {
+      const filteredLazyProps = Object.entries(props).filter(([, value]) => {
+        return !(value instanceof LazyProp);
+      });
+
+      props = Object.fromEntries(filteredLazyProps);
     }
 
     // Resolve lazy props
     Object.entries(props).forEach(([key, value]) => {
-      if (typeof value === 'function') {
+      if (value instanceof LazyProp) {
+        const resolvedValue = value.lazyValue;
+        props[key] = resolvedValue;
+      } else if (typeof value === 'function') {
         const resolvedValue = value(this.ctx);
         props[key] = resolvedValue;
       }

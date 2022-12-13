@@ -43,7 +43,8 @@
     "build": "cross-env npm run clean && npm run copyfiles && tsc",
     "watch": "cross-env npm run clean && npm run copyfiles && tsc -w",
     "test": "nyc node japaFile.js",
-    "test:debug": "node --inspect-brk japaFile.js"
+    "test:debug": "node --inspect-brk japaFile.js",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@types/md5": "^2.3.2",

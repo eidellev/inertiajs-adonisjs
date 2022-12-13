@@ -123,6 +123,7 @@ export default class InertiaProvider {
       share: Inertia.share,
       version: Inertia.version,
       manifestFile: Inertia.manifestFile,
+      lazy: Inertia.lazy,
     }));
   }
 
