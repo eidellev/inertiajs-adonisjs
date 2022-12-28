@@ -174,7 +174,7 @@ export default class InertiaProvider {
     Response.macro(
       'redirect',
       function (path?: string, forwardQueryString: boolean = false, statusCode = 302): RedirectContract | void {
-        const isInertia = this.request.rawHeaders.includes(HEADERS.INERTIA_HEADER);
+        const isInertia = this.request.headers['x-inertia'];
         const method = this.request.method;
         let finalStatusCode = statusCode;
 
