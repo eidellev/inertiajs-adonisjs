@@ -11,7 +11,6 @@ import { ResponseProps } from '@ioc:EidelLev/Inertia';
 import { encode } from 'html-entities';
 import { Inertia } from '../../src/Inertia';
 import { inertiaHelper } from '../../src/inertiaHelper';
-import { HEADERS } from '../../src/utils';
 import InertiaMiddleware from '../../middleware/Inertia';
 
 /*
