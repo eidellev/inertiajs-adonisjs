@@ -80,6 +80,15 @@ declare module '@ioc:EidelLev/Inertia' {
        * @default './inertia/ssr'
        */
       buildDirectory?: string;
+
+      /**
+       * Controls SSR autoreloading when content is changed.
+       *
+       * This should be set to true only during development. In production, you should set this to false for
+       * performance reasons.
+       * @default false
+       */
+      autoreload?: boolean;
     };
   }
 
