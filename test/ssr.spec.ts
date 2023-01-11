@@ -19,7 +19,7 @@ test.group('SSR', (group) => {
         },
       },
     };
-    const app = await setupSSR();
+    const { app } = await setupSSR();
     const server = createServer(async (req, res) => {
       const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
       const respose = await ctx.inertia.render('SomePage', props);
@@ -45,6 +45,58 @@ test.group('SSR', (group) => {
     );
   });
 
+  test('Should return updated pre-rendered react component HTML', async (assert) => {
+    const props = {
+      some: {
+        props: {
+          for: ['your', 'page'],
+        },
+      },
+    };
+    const { app, changeContent } = await setupSSR();
+    const server = createServer(async (req, res) => {
+      const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
+      const respose = await ctx.inertia.render('SomePage', props);
+
+      res.write(respose);
+      res.end();
+    });
+
+    const response = await supertest(server).get('/').expect(200);
+
+    assert.equal(
+      response.text,
+      codeBlock`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Journeyman</title>
+    </head>
+    <body><h1>Mock SSR</h1>
+    </body>
+    </html>`,
+    );
+
+    await changeContent('Updated Mock SSR');
+
+    const updatedResponse = await supertest(server).get('/').expect(200);
+
+    assert.equal(
+      updatedResponse.text,
+      codeBlock`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Journeyman</title>
+    </head>
+    <body><h1>Updated Mock SSR</h1>
+    </body>
+    </html>`,
+    );
+  });
+
   test("Should not prerender a component that's not in the allow list", async (assert) => {
     const props = {
       some: {
@@ -53,7 +105,7 @@ test.group('SSR', (group) => {
         },
       },
     };
-    const app = await setupSSR();
+    const { app } = await setupSSR();
     const server = createServer(async (req, res) => {
       const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {}, req, res);
       const respose = await ctx.inertia.render('ClientSideOnlyPage', props);

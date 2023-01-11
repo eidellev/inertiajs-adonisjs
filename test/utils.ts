@@ -96,6 +96,7 @@ export async function setupSSR() {
       ssr: {
         enabled: true,
         allowList: ['SomePage'],
+        autoreload: true,
       }
     };`,
   );
@@ -147,6 +148,16 @@ export async function setupSSR() {
   `,
   );
 
+  const changeContent = async (content) =>
+    fs.add(
+      'inertia/ssr/ssr.js',
+      codeBlock`
+    module.exports.default = function render(page) {
+      return {body:'<h1>${content}</h1>', head: ''};
+    }
+  `,
+    );
+
   const app = new Application(fs.basePath, 'web', {
     providers: ['@adonisjs/core', '@adonisjs/view', '@adonisjs/session', '../../providers/InertiaProvider'],
   });
@@ -155,7 +166,7 @@ export async function setupSSR() {
   await app.registerProviders();
   await app.bootProviders();
 
-  return app;
+  return { app, changeContent };
 }
 
 export async function teardown() {
