@@ -1,4 +1,5 @@
 {
+  "index.use_scm_ignored_files": false,
   "workspace.color": 2,
   "workspace.name": "Inertia.js Adonis"
 }
