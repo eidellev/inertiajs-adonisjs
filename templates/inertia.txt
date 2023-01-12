@@ -16,5 +16,6 @@ export const inertia: InertiaConfig = {
   view: '{{view}}',
   ssr: {
     enabled: {{shouldEnableSsr}},
+    autoreload: process.env.NODE_ENV === 'development',
   },
 };

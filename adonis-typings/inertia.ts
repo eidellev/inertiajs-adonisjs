@@ -66,7 +66,8 @@ declare module '@ioc:EidelLev/Inertia' {
        * {
        *    ssr: {
        *        enabled:true,
-       *        allowList: ['HomePage', 'Login']
+       *        allowList: ['HomePage', 'Login'],
+       *        autoreload: process.env.NODE_ENV === 'development'
        *    }
        * }
        * ```
