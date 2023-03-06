@@ -49,19 +49,19 @@ export class Inertia implements InertiaContract {
     return new LazyProp(callback);
   }
 
-  public async render(
+  public async render<T extends ResponseProps>(
     component: string,
-    responseProps: ResponseProps = {},
+    responseProps?: T,
     pageOnlyProps: ResponseProps = {},
-  ): RenderResponse {
+  ): RenderResponse<T> {
     const { view: inertiaView, ssr = { enabled: false } } = this.config;
     const { request, response, view, session } = this.ctx;
     const isInertia = request.inertia();
     const partialData = this.resolvePartialData(request.header(HEADERS.INERTIA_PARTIAL_DATA));
     const partialDataComponentHeader = request.header(HEADERS.INERTIA_PARTIAL_DATA_COMPONENT);
     const requestAssetVersion = request.header(HEADERS.INERTIA_VERSION);
-    const props: ResponseProps = await this.resolveProps(
-      { ...Inertia.sharedData, ...responseProps },
+    const props: T = await this.resolveProps(
+      { ...Inertia.sharedData, ...Object(responseProps) },
       partialData,
       component,
       partialDataComponentHeader,
