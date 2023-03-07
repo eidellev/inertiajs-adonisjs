@@ -26,13 +26,7 @@ test.group('Validation negotiator', (group) => {
       await ctx.request.validate(Validator);
     } catch (error) {
       assert.deepEqual(error.messages, {
-        errors: [
-          {
-            field: 'username',
-            message: 'required validation failed',
-            rule: 'required',
-          },
-        ],
+        username: ['required validation failed'],
       });
     }
   });
