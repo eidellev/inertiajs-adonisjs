@@ -30,6 +30,7 @@ test.group('Validation negotiator', (group) => {
       });
     }
   });
+
   test('Should use vanilla validator for HTML requests', async (assert) => {
     const app = await setup();
     const ctx = app.container.use('Adonis/Core/HttpContext').create('/', {});
