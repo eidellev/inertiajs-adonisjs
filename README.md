@@ -121,14 +121,18 @@ export default class UsersController {
       users,
       lazyProp: Inertia.lazy(() => {
         return { lazy: 'too lazy' };
-      })
+      }),
     });
   }
 }
 ```
+
 The data will be loaded on demand by the explicit Inertia visit with option
+
 ```typescript
-{ only: ['lazyProp']}
+{
+  only: ['lazyProp'];
+}
 ```
 
 ## Root template data
@@ -208,6 +212,40 @@ Route.inertia('about', 'About');
 
 // You can also pass root template data as the third parameter:
 Route.inertia('about', 'About', { metadata: '...' });
+```
+
+## TypeScript Helpers
+
+### InertiaPage
+
+Manually typing your front-end components can be tedious and error-prone. This is where the `InertiaPage` type comes in handy.
+
+If you have a controller similar to the following example:
+
+```typescript
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import { InertiaPage } from '@ioc:EidelLev/Inertia';
+
+export default class FooController {
+  public async index({ inertia }: HttpContextContract) {
+    return inertia.render('Foo', {
+      bar: 'FooBar',
+    });
+  }
+}
+
+// Export this type to use in your front-end components
+export type FooIndexProps = InertiaPage<FooController['index']>;
+```
+
+You can then use the `FooIndexProps` type in your front-end component and get type safety for your props that will update automatically if you change the controller method response params.
+
+```typescript
+import type FooIndexProps from 'App/Controllers/FooController';
+
+const FooPage = ({ bar }: FooIndexProps) => {
+  return <div>{bar}</div>;
+};
 ```
 
 ## Redirects
