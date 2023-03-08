@@ -4,19 +4,19 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 
 const ADAPTER_PROMPT_CHOICES = [
   {
-    name: '@inertiajs/inertia-vue2' as const,
+    name: '@inertiajs/vue2' as const,
     message: 'Vue 2',
   },
   {
-    name: '@inertiajs/inertia-vue3' as const,
+    name: '@inertiajs/vue3' as const,
     message: 'Vue 3',
   },
   {
-    name: '@inertiajs/inertia-react' as const,
+    name: '@inertiajs/react' as const,
     message: 'React',
   },
   {
-    name: '@inertiajs/inertia-svelte' as const,
+    name: '@inertiajs/svelte' as const,
     message: 'Svelte',
   },
 ];
@@ -74,21 +74,21 @@ export default async function instructions(projectRoot: string, app: Application
 
   let packagesToInstall;
 
-  if (adapter === '@inertiajs/inertia-vue2') {
+  if (adapter === '@inertiajs/vue2') {
     packagesToInstall = [
       adapter,
       'vue@2',
       shouldEnableSsr ? 'vue-server-renderer' : false,
       shouldEnableSsr ? 'webpack-node-externals' : false,
     ];
-  } else if (adapter === '@inertiajs/inertia-vue3') {
+  } else if (adapter === '@inertiajs/vue3') {
     packagesToInstall = [
       adapter,
       'vue',
       shouldEnableSsr ? '@vue/server-renderer' : false,
       shouldEnableSsr ? 'webpack-node-externals' : false,
     ];
-  } else if (adapter === '@inertiajs/inertia-react') {
+  } else if (adapter === '@inertiajs/react') {
     packagesToInstall = [adapter, 'react', 'react-dom', shouldEnableSsr ? 'webpack-node-externals' : false];
   } else {
     packagesToInstall = [adapter, 'svelte', shouldEnableSsr ? 'webpack-node-externals' : false];
