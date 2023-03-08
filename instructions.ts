@@ -89,7 +89,14 @@ export default async function instructions(projectRoot: string, app: Application
       shouldEnableSsr ? 'webpack-node-externals' : false,
     ];
   } else if (adapter === '@inertiajs/react') {
-    packagesToInstall = [adapter, 'react', 'react-dom', shouldEnableSsr ? 'webpack-node-externals' : false];
+    packagesToInstall = [
+      adapter,
+      'react',
+      'react-dom',
+      '@types/react',
+      '@types/react-dom',
+      shouldEnableSsr ? 'webpack-node-externals' : false,
+    ];
   } else {
     packagesToInstall = [adapter, 'svelte', shouldEnableSsr ? 'webpack-node-externals' : false];
   }
