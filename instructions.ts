@@ -4,7 +4,7 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application';
 
 const ADAPTER_PROMPT_CHOICES = [
   {
-    name: '@inertiajs/inertia-vue' as const,
+    name: '@inertiajs/inertia-vue2' as const,
     message: 'Vue 2',
   },
   {
@@ -42,20 +42,10 @@ function getView(sink: typeof sinkStatic) {
 }
 
 /**
- * Asks user of they would like to install the client-side inertia library
- */
-function getInstallInertiaUserPref(sink: typeof sinkStatic) {
-  return sink.getPrompt().confirm('Would you like to install the Inertia.js client-side adapter?', {
-    default: true,
-  });
-}
-
-/**
  * Asks user if they wish to enable SSR
  */
 function getSsrUserPref(sink: typeof sinkStatic) {
   return sink.getPrompt().confirm('Would you like to use SSR?', {
-    hint: 'Svelte is currently unsupported',
     default: false,
   });
 }
@@ -78,60 +68,56 @@ export default async function instructions(projectRoot: string, app: Application
   const configPath = app.configPath('inertia.ts');
   const inertiaConfig = new sink.files.MustacheFile(projectRoot, configPath, getStub('inertia.txt'));
   const view = await getView(sink);
-
-  const shouldInstallInertia = await getInstallInertiaUserPref(sink);
   const shouldEnableSsr = await getSsrUserPref(sink);
-
   const pkg = new sink.files.PackageJsonFile(projectRoot);
-  let adapter;
+  const adapter = await getInertiaAdapterPref(sink);
 
-  if (shouldInstallInertia) {
-    adapter = await getInertiaAdapterPref(sink);
+  let packagesToInstall;
 
-    /**
-     * Install required dependencies
-     */
-    pkg.install(adapter, undefined, false);
-
-    /**
-     * Find the list of packages we have to remove
-     */
-    const packages = [adapter].map((p) => sink.logger.colors.green(p)).join(', ');
-    const spinner = sink.logger.await(`Installing ${packages}`);
-
-    try {
-      await pkg.commitAsync();
-      spinner.update('Packages installed');
-    } catch (error) {
-      spinner.update('Unable to install packages');
-      sink.logger.fatal(error);
-    }
-
-    spinner.stop();
+  if (adapter === '@inertiajs/inertia-vue2') {
+    packagesToInstall = [
+      adapter,
+      'vue@2',
+      shouldEnableSsr ? 'vue-server-renderer' : false,
+      shouldEnableSsr ? 'webpack-node-externals' : false,
+    ];
+  } else if (adapter === '@inertiajs/inertia-vue3') {
+    packagesToInstall = [
+      adapter,
+      'vue',
+      shouldEnableSsr ? '@vue/server-renderer' : false,
+      shouldEnableSsr ? 'webpack-node-externals' : false,
+    ];
+  } else if (adapter === '@inertiajs/inertia-react') {
+    packagesToInstall = [adapter, 'react', 'react-dom', shouldEnableSsr ? 'webpack-node-externals' : false];
+  } else {
+    packagesToInstall = [adapter, 'svelte', shouldEnableSsr ? 'webpack-node-externals' : false];
   }
 
-  if (shouldEnableSsr) {
-    sink.logger.info('Adapter:', adapter);
-    const spinner = sink.logger.await(`Installing SSR dependencies`);
+  packagesToInstall = packagesToInstall.filter(Boolean);
 
-    try {
-      pkg.install('webpack-node-externals', undefined, true);
-
-      if (adapter === '@inertiajs/inertia-vue') {
-        pkg.install('vue-server-renderer', undefined, false);
-      } else if (adapter === '@inertiajs/inertia-vue3') {
-        pkg.install('@vue/server-renderer', undefined, false);
-      } else {
-        pkg.install('react-dom', undefined, false);
-      }
-
-      await pkg.commitAsync();
-      spinner.update('SSR Packages installed');
-    } catch (error) {
-      spinner.update('Unable to install packages');
-      sink.logger.fatal(error);
-    }
+  /**
+   * Install required dependencies
+   */
+  for (const packageToInstall of packagesToInstall) {
+    pkg.install(packageToInstall, undefined, false);
   }
+
+  /**
+   * Find the list of packages we have to remove
+   */
+  const packageList = packagesToInstall.map((packageName) => sink.logger.colors.green(packageName)).join(', ');
+  const spinner = sink.logger.await(`Installing dependencies: ${packageList}`);
+
+  try {
+    await pkg.commitAsync();
+    spinner.update('Dependencies installed');
+  } catch (error) {
+    spinner.update('Unable to install some or all dependencies');
+    sink.logger.fatal(error);
+  }
+
+  spinner.stop();
 
   /**
    * Generate inertia config
