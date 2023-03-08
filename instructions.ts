@@ -33,7 +33,7 @@ function getStub(...relativePaths: string[]) {
  * Prompts user for view file they wish to use
  */
 function getView(sink: typeof sinkStatic) {
-  return sink.getPrompt().ask('Enter the edge file you would like to use as your entrypoint', {
+  return sink.getPrompt().ask('Enter the `.edge` view file you would like to use as your root template', {
     default: 'app',
     validate(view) {
       return !!view.length || 'This cannot be left empty';
