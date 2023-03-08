@@ -254,7 +254,7 @@ Yous entrypoint code will depend on your client-side framework of choice:
 ```jsx
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { createInertiaApp } from '@inertiajs/inertia-react';
+import { createInertiaApp } from '@inertiajs/react';
 
 export default function render(page) {
   return createInertiaApp({
@@ -271,7 +271,7 @@ export default function render(page) {
 ```javascript
 import { createSSRApp, h } from 'vue';
 import { renderToString } from '@vue/server-renderer';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import { createInertiaApp } from '@inertiajs/vue3';
 
 export default function render(page) {
   return createInertiaApp({
@@ -292,7 +292,7 @@ export default function render(page) {
 ```javascript
 import Vue from 'vue';
 import { createRenderer } from 'vue-server-renderer';
-import { createInertiaApp } from '@inertiajs/inertia-vue';
+import { createInertiaApp } from '@inertiajs/vue2';
 
 export default function render(page) {
   return createInertiaApp({
