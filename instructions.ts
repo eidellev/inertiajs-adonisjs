@@ -91,14 +91,12 @@ export default async function instructions(projectRoot: string, app: Application
     /**
      * Install required dependencies
      */
-
-    pkg.install('@inertiajs/inertia', undefined, false);
     pkg.install(adapter, undefined, false);
 
     /**
      * Find the list of packages we have to remove
      */
-    const packages = ['@inertia/inertia', adapter].map((p) => sink.logger.colors.green(p)).join(', ');
+    const packages = [adapter].map((p) => sink.logger.colors.green(p)).join(', ');
     const spinner = sink.logger.await(`Installing ${packages}`);
 
     try {
