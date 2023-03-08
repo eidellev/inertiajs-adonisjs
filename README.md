@@ -121,14 +121,18 @@ export default class UsersController {
       users,
       lazyProp: Inertia.lazy(() => {
         return { lazy: 'too lazy' };
-      })
+      }),
     });
   }
 }
 ```
+
 The data will be loaded on demand by the explicit Inertia visit with option
+
 ```typescript
-{ only: ['lazyProp']}
+{
+  only: ['lazyProp'];
+}
 ```
 
 ## Root template data
@@ -307,8 +311,17 @@ export default function render(page) {
 
 ##### Svelte
 
-> 👷 SSR is not yet ready for the Svelte adapter,
-> but will added as soon as Inertia supports it.
+```javascript
+import { createInertiaApp } from '@inertiajs/svelte';
+import createServer from '@inertiajs/svelte/server';
+
+createServer((page) =>
+  createInertiaApp({
+    page,
+    resolve: (name) => require(`./Pages/${name}.svelte`),
+  }),
+);
+```
 
 #### Starting the SSR dev server
 
