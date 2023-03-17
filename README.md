@@ -247,7 +247,7 @@ support your client-side framework of choice.
 Create a new entrypoint `resources/js/ssr.js` (or `ssr.ts`/`ssr.tsx`
 if you prefer to use Typescript).
 
-Yous entrypoint code will depend on your client-side framework of choice:
+Your entrypoint code will depend on your client-side framework of choice:
 
 ##### React
 
