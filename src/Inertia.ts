@@ -13,7 +13,7 @@ import {
 } from '@ioc:EidelLev/Inertia';
 import { readFile } from 'fs/promises';
 import md5 from 'md5';
-import { encode } from 'querystring';
+import qs from 'qs';
 import { HEADERS } from './utils';
 import LazyProp from './LazyProp';
 
@@ -76,7 +76,7 @@ export class Inertia implements InertiaContract {
 
     if (isGet && Object.keys(queryParams).length) {
       // Keep original request query params
-      url += `?${encode(queryParams)}`;
+      url += `?${qs.stringify(queryParams)}`;
     }
 
     const page = {
