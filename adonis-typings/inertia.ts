@@ -2,8 +2,16 @@ declare module '@ioc:EidelLev/Inertia' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
   import { ResponseContract } from '@ioc:Adonis/Core/Response';
 
-  export type ResponseProps = Record<string, unknown>;
-  export type RenderResponse = Promise<Record<string, unknown> | string | ResponseContract>;
+  type AdonisControllerMethod = (ctx: HttpContextContract, ...args: any) => any;
+  export type ResponseProps = Record<string, any>;
+  type RenderedResponseProps<T extends ResponseProps> = {
+    component: string;
+    version: VersionValue;
+    props: T;
+    url: string;
+  }
+  export type RenderResponse<T extends ResponseProps> = Promise<RenderedResponseProps<T> | string | ResponseContract>;
+  export type InertiaPage<T extends AdonisControllerMethod> = Exclude<Awaited<ReturnType<T>>, string | ResponseContract>['props'];
 
   /**
    * Shared data types
@@ -31,7 +39,7 @@ declare module '@ioc:EidelLev/Inertia' {
      * @param      {string}         component      Page component
      * @param      {ResponseProps}  responseProps  Props
      */
-    render(component: string, responseProps?: ResponseProps, pageOnlyProps?: ResponseProps): RenderResponse;
+    render<T extends ResponseProps>(component: string, responseProps?: T, pageOnlyProps?: ResponseProps): RenderResponse<T>;
 
     /**
      * Redirect back with the correct HTTP status code
